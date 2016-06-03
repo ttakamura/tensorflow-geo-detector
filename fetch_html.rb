@@ -25,7 +25,7 @@ def crawl url
   sleep(1) # 一応１秒スリープ
 end
 
-thread_num  = 10
+thread_num  = 30
 host_tables = {}
 
 queue = thread_num.times.map{ Queue.new }
