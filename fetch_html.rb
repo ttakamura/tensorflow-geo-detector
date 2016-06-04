@@ -9,6 +9,7 @@ OUTPUT_DIR = 'data/html/'
 def crawl url
   name = Digest::MD5.hexdigest(url.to_s)
   cache_file = "#{OUTPUT_DIR}/#{name}"
+
   return if File.exist?(cache_file)
 
   puts "Fetch ... #{url} => #{name}"
@@ -23,6 +24,8 @@ def crawl url
   end
 
   sleep(1) # 一応１秒スリープ
+rescue => e
+  p e
 end
 
 thread_num  = 30
@@ -50,10 +53,10 @@ while line = gets
 end
 
 until queue.all?(&:empty?)
-  printf("\033[2J")
-  queue.each_with_index do |q, i|
-    puts "#{i} : " + ('*' * (q.size / 100))
-  end
+  # printf("\033[2J")
+  # queue.each_with_index do |q, i|
+  #   puts "#{i} : " + ('*' * (q.size / 100))
+  # end
   sleep 10
 end
 
