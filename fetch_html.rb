@@ -7,11 +7,11 @@ require 'thread'
 OUTPUT_DIR = 'data/html/'
 
 def crawl url
-  name = Digest::MD5.hexdigest(url.path)
+  name = Digest::MD5.hexdigest(url.to_s)
   cache_file = "#{OUTPUT_DIR}/#{name}"
   return if File.exist?(cache_file)
 
-  # puts "Fetch ... #{url}"
+  puts "Fetch ... #{url} => #{name}"
 
   Net::HTTP.start(url.host, url.port) do |http|
     res = http.get(url.path)
@@ -54,7 +54,7 @@ until queue.all?(&:empty?)
   queue.each_with_index do |q, i|
     puts "#{i} : " + ('*' * (q.size / 100))
   end
-  sleep 1
+  sleep 10
 end
 
 threads.each{ |t| t.join }
