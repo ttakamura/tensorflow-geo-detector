@@ -29,6 +29,7 @@ func Download(url string) {
 
   if Exists(filename) {
     fmt.Print("Cached ... " + url + " ==> " + filename + "\n")
+    time.Sleep(10 * time.Millisecond)
     return
   }
 
@@ -49,7 +50,7 @@ func Download(url string) {
   io.Copy(file, response.Body)
 
   fmt.Print("Fetched ... " + url + " ==> " + filename + "\n")
-  time.Sleep(1 * time.Second) // 一秒休む
+  time.Sleep(800 * time.Millisecond)
 }
 
 func Crawl(c chan string, quit chan bool) {
@@ -69,17 +70,21 @@ func MyId(url string) int {
 }
 
 func main() {
-  thread_num := 200
+  thread_num := 5000
 
   urlq := make([]chan string, thread_num)
   quitq := make([]chan bool, thread_num)
 
   for i := 0; i < thread_num; i++ {
-    urlq[i] = make(chan string, 1000000)
+    urlq[i] = make(chan string, 5000)
     quitq[i] = make(chan bool)
   }
 
   stdin_scan := bufio.NewScanner(os.Stdin)
+
+  for i := range urlq {
+    go Crawl(urlq[i], quitq[i])
+  }
 
   for stdin_scan.Scan() {
     inputUrl := stdin_scan.Text()
@@ -90,10 +95,6 @@ func main() {
       id := MyId(u.Host) % thread_num
       urlq[id] <- inputUrl
     }
-  }
-
-  for i := range urlq {
-    go Crawl(urlq[i], quitq[i])
   }
 
   for i := range urlq {
