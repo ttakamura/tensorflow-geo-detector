@@ -70,13 +70,13 @@ func MyId(url string) int {
 }
 
 func main() {
-  thread_num := 5000
+  thread_num := 500
 
   urlq := make([]chan string, thread_num)
   quitq := make([]chan bool, thread_num)
 
   for i := 0; i < thread_num; i++ {
-    urlq[i] = make(chan string, 5000)
+    urlq[i] = make(chan string, 200000)
     quitq[i] = make(chan bool)
   }
 
