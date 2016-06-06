@@ -13,39 +13,21 @@ def parse file_path, name_pattern, addr_pattern, &block
     Nokogiri::HTML.parse(f.read)
   end
   traverse(doc, name_pattern, addr_pattern, &block)
-  return true
-  #
-  # doc.search('//text()').each do |node|
-  #   blank_line = node.text =~ /^[\n\s｜\|]+$/
-  #   html_line  = node.text =~ /<.+>/
-  #   code_line  = node.text =~ /<!--/
-  #   num_line   = node.text =~ /^[0-9\n]+$/
-  #   jap_line   = node.text =~ JAP_REGEXP
-  #   if blank_line || html_line || code_line || num_line || (!jap_line)
-  #     # nop
-  #   else
-  #     block.call node
-  #   end
-  # end
 end
 
 def traverse node, name_pattern, addr_pattern, &block
   node.children.each do |n|
-    if n.text && n.text.size > 1
-      text = n.text.gsub(/\n\s/,'')
-
-      path = '/html/body/div[13]/div/div/div[3]/div[1]/div[9]/div[2]/table[1]/tbody/tr[4]/th/'
-      if node.path == path
-        p node
-        raise 'Found!!'
-      end
+    if n.text && n.text().size > 1
+      text = normalize(n.text()).gsub(/[\n\s\t]*/,'')
 
       if text =~ name_pattern
-        block.call n, 1
+        # raise "#{text} name"
+        block.call n, text, 1
       elsif text =~ addr_pattern
-        block.call n, 2
+        # raise "#{text} addr"
+        block.call n, text, 2
       elsif n.children.size == 0
-        block.call n, 0
+        block.call n, text, 0
       else
         traverse(n, name_pattern, addr_pattern, &block)
       end
@@ -54,37 +36,20 @@ def traverse node, name_pattern, addr_pattern, &block
 end
 
 def convert file_path, name_pattern, addr_pattern
-  parse(file_path, name_pattern, addr_pattern) do |node, category|
-    if node.text?
-      # Nokogiri::CSS.xpath_for node.css_path
-      # p node.css_path
-      text = normalize(node.text).gsub(/[\n\t\s]/, '')
-      if text.size > 1
-        puts [text, category, node.path].join("\t")
+  parse(file_path, name_pattern, addr_pattern) do |node, text, category|
+    if category != 0 || node.text?
+      if text.size > 1 && !(text =~ /\A[0-9]+\z/)
+        # puts [text, category, node.path].join("\t")
+        puts [text, category].join("\t")
       end
     end
   end
 end
 
-def annotate token, name_pattern, addr_pattern
-  if token =~ name_pattern
-    print_with_annotate(token, '1')
-  elsif token =~ addr_pattern
-    print_with_annotate(token, '2')
-  else
-    print_with_annotate(token, '0')
-  end
-end
-
-def print_with_annotate token, category
-  puts [category, token].join("\t")
-end
-
 def ngram_regexp text, ngram
-  tokens = normalize(text).split(//).map{ |c| Regexp.escape(c) }
-  tokens = tokens.each_cons(ngram).map{ |b| b.join("") }
-  regexp = /^(#{ tokens.join("|") })+$/
-  p regexp
+  # tokens = normalize(text).split(//).map{ |c| Regexp.escape(c) }
+  # tokens = tokens.each_cons(ngram).map{ |b| b.join("") }
+  regexp = /\A(#{ text })+\z/
   regexp
 end
 
