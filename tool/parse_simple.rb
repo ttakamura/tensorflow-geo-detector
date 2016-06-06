@@ -3,7 +3,7 @@
 # とりあえず HTML を単純な文字列に変換する
 #
 require 'nokogiri'
-require File.dirname(__FILE__) + '/../lib/local_place_normalizer.rb'
+require './lib/local_place_normalizer.rb'
 
 JAP_REGEXP = /(?:\p{Hiragana}|\p{Katakana}|[ー－]|[一-龠々]|[0-9])+/
 
@@ -15,8 +15,9 @@ def parse file_path, &block
     blank_line = node.text =~ /^[\n\s｜\|]+$/
     html_line  = node.text =~ /<.+>/
     code_line  = node.text =~ /<!--/
+    num_line   = node.text =~ /^[0-9\n]+$/
     jap_line   = node.text =~ JAP_REGEXP
-    if blank_line || html_line || code_line || (!jap_line)
+    if blank_line || html_line || code_line || num_line || (!jap_line)
       # nop
     else
       block.call node
@@ -26,23 +27,28 @@ end
 
 def convert file_path, name_pattern, addr_pattern
   parse(file_path) do |node|
-    if node.text =~ name_pattern
-      print_with_annotate(node.text, '1')
-    elsif node.text =~ addr_pattern
-      print_with_annotate(node.text, '2')
-    else
-      print_with_annotate(node.text, '0')
+    text = normalize(node.text).gsub(/[\n\t\s]/, '')
+    if text.size > 1
+      if text =~ name_pattern
+        print_with_annotate(text, '1')
+      elsif text =~ addr_pattern
+        print_with_annotate(text, '2')
+      else
+        print_with_annotate(text, '0')
+      end
     end
   end
 end
 
 def print_with_annotate text, category
-  text = text.gsub(/[\n\t\s]/, '')
   puts [category, text].join("\t")
 end
 
 def trigram_regexp text
-  normalize(text)
+  x = normalize(text)
+  x = Regexp.new("^(" + x.split(//).map{ |c| Regexp.escape(c) }.join("|") + ")+$")
+  p x
+  x
 end
 
 def normalize text

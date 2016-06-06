@@ -39,14 +39,8 @@ class LocalPlaceNormalizer
       :full_to_half,
       :kansuuji,
       :separator,
-      :remove_ignore_symbol,
       :remove_parenthesis,
-      :remove_japan_prefix,
-      :remove_zip_code,
-      :remove_choume,
-      :normalize_floor,
-      :remove_building_name,
-      :remove_nearly
+      :remove_choume
     ]
     funcs.each do |func|
       address = send(func, address)
