@@ -50,7 +50,7 @@ def boot_threads thread_num, queue
   end
 end
 
-thread_num  = 30
+thread_num  = 1000
 host_tables = {}
 queue       = thread_num.times.map{ Queue.new }
 threads     = boot_threads(thread_num, queue)
