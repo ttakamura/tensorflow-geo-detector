@@ -25,7 +25,7 @@ func Exists(filename string) bool {
 
 func Download(url string) {
   urlname := UrlToName(url)
-  filename := "./tmp/" + urlname
+  filename := "./small_data/html/" + urlname
 
   if Exists(filename) {
     fmt.Print("Cached ... " + url + " ==> " + filename + "\n")
@@ -34,13 +34,15 @@ func Download(url string) {
 
   response, err := http.Get(url)
   if err != nil {
-    panic(err)
+    // panic(err)
+    return
   }
   defer response.Body.Close()
 
   file, err := os.Create(filename)
   if err != nil {
-    panic(err)
+    // panic(err)
+    return
   }
   defer file.Close()
 
