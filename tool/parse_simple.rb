@@ -4,6 +4,7 @@
 #
 require 'nokogiri'
 require './lib/local_place_normalizer.rb'
+require 'pry'
 
 JAP_REGEXP = /(?:\p{Hiragana}|\p{Katakana}|[ー－]|[一-龠々]|[0-9])+/
 
@@ -30,24 +31,25 @@ def convert file_path, name_pattern, addr_pattern
     text = normalize(node.text).gsub(/[\n\t\s]/, '')
     if text.size > 1
       if text =~ name_pattern
-        print_with_annotate(text, '1')
+        print_with_annotate(node, '1')
       elsif text =~ addr_pattern
-        print_with_annotate(text, '2')
+        print_with_annotate(node, '2')
       else
-        print_with_annotate(text, '0')
+        print_with_annotate(node, '0')
       end
     end
   end
 end
 
-def print_with_annotate text, category
-  puts [category, text].join("\t")
+def print_with_annotate node, category
+  # Nokogiri::CSS.xpath_for node.css_path
+  p node.css_path
+  puts [category, node.text].join("\t")
 end
 
 def trigram_regexp text
   x = normalize(text)
   x = Regexp.new("^(" + x.split(//).map{ |c| Regexp.escape(c) }.join("|") + ")+$")
-  p x
   x
 end
 
