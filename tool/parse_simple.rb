@@ -3,6 +3,7 @@
 # とりあえず HTML を単純な文字列に変換する
 #
 require 'nokogiri'
+require File.dirname(__FILE__) + '/../lib/local_place_normalizer.rb'
 
 JAP_REGEXP = /(?:\p{Hiragana}|\p{Katakana}|[ー－]|[一-龠々]|[0-9])+/
 

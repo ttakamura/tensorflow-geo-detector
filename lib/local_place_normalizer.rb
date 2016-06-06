@@ -3,7 +3,6 @@
 require 'csv'
 
 class LocalPlaceNormalizer
-
   class << self
     def normalize_basic name
       LocalPlaceNormalizer.new.normalize_basic name
