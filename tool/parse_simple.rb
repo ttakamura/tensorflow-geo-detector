@@ -42,11 +42,11 @@ def print_with_annotate text, category
 end
 
 def trigram_regexp text
-
+  normalize(text)
 end
 
 def normalize text
-  text.tr("０-９", "0-9")
+  LocalPlaceNormalizer.normalize_hoge text
 end
 
 html_file   = ARGV.shift

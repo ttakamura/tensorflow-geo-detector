@@ -16,6 +16,10 @@ class LocalPlaceNormalizer
       LocalPlaceNormalizer.new.normalize_address address
     end
 
+    def normalize_hoge text
+      LocalPlaceNormalizer.new.normalize_hoge text
+    end
+
     # CSVファイルをコンバートする。（テスト用）
     # CSVファイルの最初のカラムの値を使います。
     # 例:
@@ -27,6 +31,27 @@ class LocalPlaceNormalizer
         puts "#{send("normalize_#{type}", value)} <<< #{value}" if value != nil
       end
     end
+  end
+
+  def normalize_hoge address
+    funcs = [
+      :remove_whitespaces,
+      :full_to_half,
+      :kansuuji,
+      :separator,
+      :remove_ignore_symbol,
+      :remove_parenthesis,
+      :remove_japan_prefix,
+      :remove_zip_code,
+      :remove_choume,
+      :normalize_floor,
+      :remove_building_name,
+      :remove_nearly
+    ]
+    funcs.each do |func|
+      address = send(func, address)
+    end
+    address
   end
 
   def normalize_basic name
