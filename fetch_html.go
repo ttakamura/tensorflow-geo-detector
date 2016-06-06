@@ -69,7 +69,7 @@ func MyId(url string) int {
 }
 
 func main() {
-  thread_num := 1000
+  thread_num := 200
 
   urlq := make([]chan string, thread_num)
   quitq := make([]chan bool, thread_num)
