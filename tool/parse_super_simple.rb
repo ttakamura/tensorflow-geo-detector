@@ -35,7 +35,7 @@ def traverse node, name_pattern, addr_pattern, &block
   end
 end
 
-def convert io, file_path, name_pattern, addr_pattern
+def convert_html io, file_path, name_pattern, addr_pattern
   parse(file_path, name_pattern, addr_pattern) do |node, text, category|
     if category != 0
       output_each_char io, text, category
@@ -59,7 +59,7 @@ def output_each_char io, text, category
   end
 end
 
-def ngram_regexp text, ngram
+def ngram_regexp text
   # tokens = normalize(text).split(//).map{ |c| Regexp.escape(c) }
   # tokens = tokens.each_cons(ngram).map{ |b| b.join("") }
   regexp = /\A(#{ text })+\z/
@@ -73,7 +73,7 @@ end
 if __FILE__ == $0
   # サンプルコード
   html_file   = 'small_data/html/2b83cffa3e1e2315d4c8455b23194f00'
-  name_regexp = ngram_regexp('にくや萬野', 3)
-  addr_regexp = ngram_regexp('大阪府大阪市北区曽根崎2-10-9', 3)
-  convert(STDOUT, html_file, name_regexp, addr_regexp)
+  name_regexp = ngram_regexp('にくや萬野')
+  addr_regexp = ngram_regexp('大阪府大阪市北区曽根崎2-10-9')
+  convert_html(STDOUT, html_file, name_regexp, addr_regexp)
 end
