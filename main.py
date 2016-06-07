@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
-from tensorflow.models.rnn import rnn, rnn_cell
+import reader
+import model
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -9,81 +10,27 @@ tf.app.flags.DEFINE_string("data_dir",     "tabelog_final_s",  "dir")
 tf.app.flags.DEFINE_float("learning_rate", 0.001,              "Learning rate.")
 tf.app.flags.DEFINE_integer("loop_num",    64,                 "Number of train.")
 tf.app.flags.DEFINE_integer("batch_size",  1,                  "batch.")
-tf.app.flags.DEFINE_integer("data_num",    100,                "Data of all.")
 tf.app.flags.DEFINE_integer("steps",       1000,               "max_step")
 tf.app.flags.DEFINE_integer("vocab_size",  100,                "vocaburary")
 tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
 tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
-def RNN(x, y):
-  # Define weights
-  weights = {
-    'hidden': tf.Variable(tf.random_normal([FLAGS.vocab_size, FLAGS.hidden_size])),
-    'out': tf.Variable(tf.random_normal([FLAGS.hidden_size, FLAGS.out_size]))
-  }
-  biases = {
-    'hidden': tf.Variable(tf.random_normal([FLAGS.hidden_size])),
-    'out': tf.Variable(tf.random_normal([FLAGS.out_size]))
-  }
-
-  # Prepare data shape to match `rnn` function requirements
-  # Current data input shape: (batch_size, n_steps, n_input)
-  # Permuting batch_size and n_steps
-  x = tf.transpose(x, [1, 0, 2])
-
-  # Reshaping to (n_steps*batch_size, n_input)
-  x = tf.reshape(x, [-1, FLAGS.vocab_size])
-
-  # Split to get a list of 'n_steps' tensors of shape (batch_size, n_hidden)
-  # This input shape is required by `rnn` function
-  x = tf.split(0, FLAGS.steps, x)
-
-  # Define a lstm cell with tensorflow
-  lstm_cell = rnn_cell.BasicLSTMCell(FLAGS.hidden_size, forget_bias=1.0)
-
-  # Get lstm cell output
-  outputs, states = rnn.rnn(lstm_cell, x, dtype=tf.float32)
-
-  # Linear activation, using rnn inner loop last output
-  pred = tf.matmul(outputs[-1], weights['out']) + biases['out']
-
-  # Define loss and optimizer
-  cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
-
-  return pred, loss
-
-def load_train_data(step, ids):
-  # TODO
-  # i = step /
-  hash = ids[step][1]
-  return np.load("%s/np/%s.npy" % (FLAGS.data_dir, hash))
-
 def main(argv=None):
-  ids, vocabrary = np.load("%s/np/main.np.npy" % FLAGS.data_dir)
-  np.random.shuffle(ids)
+  ids, vocabrary = reader.load_master_data(FLAGS.data_dir)
 
-  # tf Graph input
-  x = tf.placeholder("float", [None, FLAGS.steps, FLAGS.vocab_size])
-  y = tf.placeholder("float", [None, FLAGS.steps, FLAGS.out_size])
+  x, y       = model.placeholders()
+  pred, loss = model.RNN(x, y)
+  optimizer  = model.optimizer(loss)
+  accuracy   = model.accuracy(pred, y)
 
-  pred, loss = RNN(x, y)
-  optimizer = tf.train.AdamOptimizer(learning_rate=FLAGS.learning_rate).minimize(loss)
-
-  # Evaluate model
-  correct_pred = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
-  accuracy     = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
-
-  # Initializing the variables
-  init = tf.initialize_all_variables()
-
-  # Launch the graph
   with tf.Session() as sess:
-    sess.run(init)
+    sess.run(tf.initialize_all_variables())
 
-    # Keep training until reach max iterations
+    train_data, test_data = reader.load_train_data(ids, FLAGS.data_dir)
+    1/0
+
     for step in range(FLAGS.loop_num):
-      batch_x, batch_y, batch_z = load_train_data(step, ids)
-      batch_x = batch_x.reshape((FLAGS.batch_size, FLAGS.steps, FLAGS.vocab_size))
+      batch_x = train_data[step]['x']
       sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
 
       if step > 0:
