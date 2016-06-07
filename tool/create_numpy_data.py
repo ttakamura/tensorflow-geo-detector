@@ -6,8 +6,9 @@ import numpy as np
 from scipy.sparse import *
 import csv
 
-csv_file = 'tabelog_final/data.csv'
-doc_dir  = 'tabelog_final/docs/'
+base_dir = 'tabelog_final_s/'
+csv_file = ('%s/data.csv' % base_dir)
+doc_dir  = ('%s/docs/' % base_dir)
 
 vocabrary     = {}
 vocab_counter = {}
@@ -23,6 +24,8 @@ def add_vocab(text):
   else:
     vocab_counter[text] += 1
   return vocabrary[text]
+
+def open_csv(csv_file)
 
 with open(csv_file, 'r') as f:
   csv_reader = csv.reader(f)
@@ -46,12 +49,12 @@ with open(csv_file, 'r') as f:
     if max_step < step:
       max_step = step
 
+    print(data_num)
+
 max_vocab = len(vocabrary)
-mat = lil_matrix((data_num, max_step, max_vocab))
 
-print(mat)
-
-1 / 0
+shape = (max_step, max_vocab)
+mat = lil_matrix(shape)
 
 with open(csv_file, 'r') as f:
   csv_reader = csv.reader(f)
