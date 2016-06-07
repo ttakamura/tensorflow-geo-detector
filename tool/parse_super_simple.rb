@@ -59,21 +59,28 @@ def output_each_char io, text, category
   end
 end
 
-def ngram_regexp text
-  # tokens = normalize(text).split(//).map{ |c| Regexp.escape(c) }
-  # tokens = tokens.each_cons(ngram).map{ |b| b.join("") }
-  regexp = /\A(#{ text })+\z/
-  regexp
+def ngram_regexp text, ngram=0
+  if ngram > 0
+    tokens = normalize(text).split(//).map{ |c| Regexp.escape(c) }
+    tokens = tokens.each_cons(ngram).map{ |b| b.join("") }
+    /\A(#{ tokens.join("|") })+\z/
+  else
+    tokens = normalize(text)
+    /\A(#{ tokens })+\z/
+  end
 end
 
 def normalize text
-  LocalPlaceNormalizer.normalize_hoge text
+  if text =~ /({\d}+)丁目({\d}+)番({\d}+)号/
+    text = text.gsub(/(丁目|番|号)/, '-')
+  end
+  LocalPlaceNormalizer.normalize_hoge(text)
 end
 
 if __FILE__ == $0
   # サンプルコード
-  html_file   = 'small_data/html/2b83cffa3e1e2315d4c8455b23194f00'
-  name_regexp = ngram_regexp('にくや萬野')
-  addr_regexp = ngram_regexp('大阪府大阪市北区曽根崎2-10-9')
+  html_file   = 'small_data/html/72374f695a840f98b24ad5c95d037359'
+  name_regexp = ngram_regexp('')
+  addr_regexp = ngram_regexp('', 3)
   convert_html(STDOUT, html_file, name_regexp, addr_regexp)
 end

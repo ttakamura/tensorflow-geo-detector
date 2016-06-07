@@ -18,7 +18,7 @@ def convert_csv id, url, name, addr, source_row, out_csv
     out_csv << [id, url, hash, name, addr]
     open("tabelog_only/docs/#{hash}", "w") do |doc_file|
       name_pattern = ngram_regexp(name)
-      addr_pattern = ngram_regexp(addr)
+      addr_pattern = ngram_regexp(addr, 3)
       convert_html(doc_file, "small_data/html/#{hash}", name_pattern, addr_pattern)
     end
   end
