@@ -17,20 +17,20 @@ end
 
 def traverse node, name_pattern, addr_pattern, &block
   node.children.each do |n|
-    if n.text && n.text().size > 1
+    block.call n, "", 0
+    if n.text() && n.text().size > 1
       text = normalize(n.text()).gsub(/[\n\s\t]*/,'')
-
       if text =~ name_pattern
-        # raise "#{text} name"
         block.call n, text, 1
       elsif text =~ addr_pattern
-        # raise "#{text} addr"
         block.call n, text, 2
       elsif n.children.size == 0
         block.call n, text, 0
       else
         traverse(n, name_pattern, addr_pattern, &block)
       end
+    else
+      traverse(n, name_pattern, addr_pattern, &block)
     end
   end
 end
@@ -38,18 +38,24 @@ end
 def convert file_path, name_pattern, addr_pattern
   parse(file_path, name_pattern, addr_pattern) do |node, text, category|
     if category != 0
-      output text, category
+      output_each_char text, category
     elsif node.text?
-      output text, 0
+      output_each_char text, 0
     else
-      output node.path, 0
+      output "<#{node.name}>", 0
     end
   end
 end
 
 def output text, category
-  if text.size > 0 && text.size < 50
+  if text.size > 0
     puts [text, category].join("\t")
+  end
+end
+
+def output_each_char text, category
+  text.split(//).each do |c|
+    puts [c, category].join("\t")
   end
 end
 
