@@ -1,6 +1,6 @@
 import numpy as np
 
-def load_train_data(ids, data_dir):
+def load_train_data(ids, data_dir, batch_size):
   np.random.shuffle(ids)
   data_num   = len(ids)
   train_num  = floor(data_num * 0.7)

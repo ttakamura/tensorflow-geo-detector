@@ -37,29 +37,36 @@ def accuracy(pred, y):
     accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
   return accuracy
 
-def RNN(x, y):
+def RNN(x, y, steps):
   x, y = reshape(x, y)
 
   with tf.variable_scope('lstm1') as scope:
     lstm_cell = rnn_cell.BasicLSTMCell(FLAGS.hidden_size, forget_bias=1.0)
-    outputs, states = rnn.rnn(lstm_cell, x, dtype=tf.float32)
+    state     = tf.zeros([ FLAGS.batch_size, lstm_cell.state_size ])
+    W_out     = weight_variable([FLAGS.hidden_size, FLAGS.out_size])
+    b_out     = bias_variable([FLAGS.out_size])
+    loss      = 0.0
+    initial_state = state
 
-  with tf.variable_scope('output') as scope:
-    W_out = weight_variable([FLAGS.hidden_size, FLAGS.out_size])
-    b_out = bias_variable([FLAGS.out_size])
-    pred  = list()
-    loss  = list()
-    for i in range(len(outputs)):
-      pred.append( tf.matmul(outputs[i], W_out) + b_out )
-      loss.append( tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred[i], y[i])) )
+    with tf.variable_scope("RNN"):
+      for time_step in range(steps):
+        if time_step > 0: tf.get_variable_scope().reuse_variables()
+        output, state = lstm_cell(x[time_step], state)
+
+        with tf.variable_scope('output_%s' % time_step) as scope:
+          output = tf.matmul(output, W) + b
+          loss  += tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(output, y[time_step]))
+          outputs.append(output)
+
+    final_state = state
 
   print('x', x[0])
   print('y', y[0])
   print('out', outputs[0])
   print('pred', pred[0])
-  print('loss', loss[0])
+  print('loss', loss)
 
-  return pred, loss
+  return pred, loss, initial_state, final_state
 
 # ------- reshaping -----------------------------------
 

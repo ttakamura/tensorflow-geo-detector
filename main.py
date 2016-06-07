@@ -9,7 +9,7 @@ tf.app.flags.DEFINE_string("mode",         "train",            "train")
 tf.app.flags.DEFINE_string("data_dir",     "tabelog_final_s",  "dir")
 tf.app.flags.DEFINE_float("learning_rate", 0.001,              "Learning rate.")
 tf.app.flags.DEFINE_integer("loop_num",    64,                 "Number of train.")
-tf.app.flags.DEFINE_integer("batch_size",  1,                  "batch.")
+tf.app.flags.DEFINE_integer("batch_size",  100,                "batch.")
 tf.app.flags.DEFINE_integer("steps",       1000,               "max_step")
 tf.app.flags.DEFINE_integer("vocab_size",  100,                "vocaburary")
 tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
@@ -18,16 +18,20 @@ tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 def main(argv=None):
   ids, vocabrary = reader.load_master_data(FLAGS.data_dir)
 
-  x, y       = model.placeholders()
-  pred, loss = model.RNN(x, y)
-  optimizer  = model.optimizer(loss)
-  accuracy   = model.accuracy(pred, y)
+  x, y = model.placeholders()
+
+  pred, loss, initial_state, final_state = model.RNN(x, y, FLAGS.steps / FLAGS.batch_size)
+
+  optimizer = model.optimizer(loss)
+  accuracy  = model.accuracy(pred, y)
 
   with tf.Session() as sess:
     sess.run(tf.initialize_all_variables())
 
-    train_data, test_data = reader.load_train_data(ids, FLAGS.data_dir)
-    1/0
+    train_data, test_data = reader.load_train_data(ids, FLAGS.data_dir, FLAGS.batch_size)
+    print(train_data)
+    print(test_data)
+    1 / 0
 
     for step in range(FLAGS.loop_num):
       batch_x = train_data[step]['x']
