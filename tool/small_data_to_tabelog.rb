@@ -15,13 +15,15 @@ end
 def convert_csv id, url, name, addr, source_row, out_csv
   hash = @url_to_id[url]
   if hash
-    out_csv << [id, url, hash, name, addr]
     open("tabelog_only/docs/#{hash}", "w") do |doc_file|
       name_pattern = ngram_regexp(name)
       addr_pattern = ngram_regexp(addr, 3)
       convert_html(doc_file, "small_data/html/#{hash}", name_pattern, addr_pattern)
     end
+    out_csv << [id, url, hash, name, addr]
   end
+rescue => e
+  p e
 end
 
 CSV.open("tabelog_only/data.csv", "w") do |tabelog_data_csv|
