@@ -42,26 +42,44 @@ def open_csv(doc_dir, csv_file):
           if len(tsv_row) == 2:
             token, category = tsv_row
             token = token.decode('utf-8')
-            yield data_num, step, token
+            yield data_num, step, token, hash, int(category)
+          else:
+            yield data_num, step, "", "", int(category)
       if max_step < step:
         max_step = step
 
-for id, step, token in open_csv(doc_dir, csv_file):
+for id, step, token, hash, category in open_csv(doc_dir, csv_file):
   add_vocab(token)
 
 max_vocab   = len(vocabrary)
 x_data_num  = data_num
-x_max_step  = max_step
+x_max_step  = max_step + 1
 x_max_vocab = max_vocab
 
-shape = (x_max_step, x_max_vocab)
-mat   = lil_matrix((shape))
+shape     = (x_max_step, x_max_vocab)
+yshape    = (x_max_step, 3)
+x_matrixs = list()
+y_matrixs = list()
+data_num  = 0
+max_step  = 0
+last_hash = None
+hash_map  = {}
 
-data_num = 0
-max_step = 0
+final_result = list()
 
-for id, step, token in open_csv(doc_dir, csv_file):
-  mat[step, vocabrary[token]] = 1.0
-  if id == 2:
-    # print(mat)
-    1/0
+for id, step, token, hash, category in open_csv(doc_dir, csv_file):
+  i = id - 1
+  if len(x_matrixs) == i:
+    x_matrixs.append(lil_matrix(shape))
+    y_matrixs.append(lil_matrix(yshape))
+    final_result.append([id, hash, category])
+    hash_map[i] = hash
+  x_matrixs[i][step, vocabrary[token]] = 1.0
+  y_matrixs[i][step, category] = 1.0
+
+for i in range(len(x_matrixs)):
+  np_file = ('%s/np/%s' % (base_dir, hash_map[i]))
+  np.save(np_file, (x_matrixs[i], y_matrixs[i]))
+
+np_file = ('%s/np/main.np' % base_dir)
+np.save(np_file, (np.array(final_result), np.array(vocabrary)))
