@@ -31,8 +31,10 @@ def optimizer(loss):
 
 def accuracy(pred, y):
   with tf.variable_scope('evaluate') as scope:
-    correct_pred = tf.equal(tf.argmax(pred,1), tf.argmax(y,1))
-    accuracy     = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
+    correct_pred = list()
+    for i in range(len(pred)):
+      correct_pred.append(tf.equal(tf.argmax(pred[i],1), tf.argmax(y[i],1)))
+    accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
   return accuracy
 
 def RNN(x, y):
@@ -42,10 +44,6 @@ def RNN(x, y):
     lstm_cell = rnn_cell.BasicLSTMCell(FLAGS.hidden_size, forget_bias=1.0)
     outputs, states = rnn.rnn(lstm_cell, x, dtype=tf.float32)
 
-  print('x', x[0])
-  print('y', y[0])
-  print('out', outputs[0])
-
   with tf.variable_scope('output') as scope:
     W_out = weight_variable([FLAGS.hidden_size, FLAGS.out_size])
     b_out = bias_variable([FLAGS.out_size])
@@ -54,6 +52,12 @@ def RNN(x, y):
     for i in range(len(outputs)):
       pred.append( tf.matmul(outputs[i], W_out) + b_out )
       loss.append( tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred[i], y[i])) )
+
+  print('x', x[0])
+  print('y', y[0])
+  print('out', outputs[0])
+  print('pred', pred[0])
+  print('loss', loss[0])
 
   return pred, loss
 
