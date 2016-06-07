@@ -37,12 +37,19 @@ end
 
 def convert file_path, name_pattern, addr_pattern
   parse(file_path, name_pattern, addr_pattern) do |node, text, category|
-    if category != 0 || node.text?
-      if text.size > 1 && !(text =~ /\A[0-9]+\z/)
-        # puts [text, category, node.path].join("\t")
-        puts [text, category].join("\t")
-      end
+    if category != 0
+      output text, category
+    elsif node.text?
+      output text, 0
+    else
+      output node.path, 0
     end
+  end
+end
+
+def output text, category
+  if text.size > 0 && text.size < 50
+    puts [text, category].join("\t")
   end
 end
 
