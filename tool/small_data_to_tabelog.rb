@@ -1,3 +1,7 @@
+# coding: utf-8
+#
+# small_data から tabelog.com にマッチするデータのみを抽出＆変換する
+#
 require 'csv'
 require './tool/parse_super_simple.rb'
 

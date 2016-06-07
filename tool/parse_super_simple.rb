@@ -1,6 +1,6 @@
 # coding: utf-8
 #
-# とりあえず HTML を分割する
+# とりあえず HTML をタグと１文字ずつの文字に分割する
 #
 require 'nokogiri'
 require './lib/local_place_normalizer.rb'

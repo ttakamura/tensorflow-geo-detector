@@ -1,4 +1,9 @@
+# coding: utf-8
 require 'csv'
+#
+# tabelog_only から tabelog_final を生成する
+# 名前と住所が上手く HTML にヒットしなかったものを取り除く
+#
 
 def cleanup_row row, out_csv
   hash = row[2]
