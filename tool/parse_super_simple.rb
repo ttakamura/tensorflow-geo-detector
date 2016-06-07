@@ -35,27 +35,27 @@ def traverse node, name_pattern, addr_pattern, &block
   end
 end
 
-def convert file_path, name_pattern, addr_pattern
+def convert io, file_path, name_pattern, addr_pattern
   parse(file_path, name_pattern, addr_pattern) do |node, text, category|
     if category != 0
-      output_each_char text, category
+      output_each_char io, text, category
     elsif node.text?
-      output_each_char text, 0
+      output_each_char io, text, 0
     else
-      output "<#{node.name}>", 0
+      output io, "<#{node.name}>", 0
     end
   end
 end
 
-def output text, category
+def output io, text, category
   if text.size > 0
-    puts [text, category].join("\t")
+    io.puts [text, category].join("\t")
   end
 end
 
-def output_each_char text, category
+def output_each_char io, text, category
   text.split(//).each do |c|
-    puts [c, category].join("\t")
+    io.puts [c, category].join("\t")
   end
 end
 
@@ -70,8 +70,10 @@ def normalize text
   LocalPlaceNormalizer.normalize_hoge text
 end
 
-html_file   = ARGV.shift
-name_regexp = ngram_regexp('にくや萬野', 3)
-addr_regexp = ngram_regexp('大阪府大阪市北区曽根崎2-10-9', 3)
-
-convert(html_file, name_regexp, addr_regexp)
+if __FILE__ == $0
+  # サンプルコード
+  html_file   = 'small_data/html/2b83cffa3e1e2315d4c8455b23194f00'
+  name_regexp = ngram_regexp('にくや萬野', 3)
+  addr_regexp = ngram_regexp('大阪府大阪市北区曽根崎2-10-9', 3)
+  convert(STDOUT, html_file, name_regexp, addr_regexp)
+end
