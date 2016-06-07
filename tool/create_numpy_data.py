@@ -58,8 +58,10 @@ x_max_vocab = max_vocab
 
 shape     = (x_max_step, x_max_vocab)
 yshape    = (x_max_step, 3)
+zshape    = (x_max_step, 1)
 x_matrixs = list()
 y_matrixs = list()
+z_matrixs = list()
 data_num  = 0
 max_step  = 0
 last_hash = None
@@ -72,14 +74,18 @@ for id, step, token, hash, category in open_csv(doc_dir, csv_file):
   if len(x_matrixs) == i:
     x_matrixs.append(lil_matrix(shape))
     y_matrixs.append(lil_matrix(yshape))
+    z_matrixs.append(lil_matrix(zshape))
     final_result.append([id, hash, category])
     hash_map[i] = hash
   x_matrixs[i][step, vocabrary[token]] = 1.0
   y_matrixs[i][step, category] = 1.0
+  z_matrixs[i][step, 0] = vocabrary[token]
+  # if category > 0:
+  #   print(category, token, step, y_matrixs[i].todense()[step, :])
 
 for i in range(len(x_matrixs)):
   np_file = ('%s/np/%s' % (base_dir, hash_map[i]))
-  np.save(np_file, (x_matrixs[i], y_matrixs[i]))
+  np.save(np_file, (x_matrixs[i], y_matrixs[i], z_matrixs[i]))
 
 np_file = ('%s/np/main.np' % base_dir)
 np.save(np_file, (np.array(final_result), np.array(vocabrary)))
