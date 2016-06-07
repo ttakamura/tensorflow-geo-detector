@@ -83,3 +83,6 @@ for i in range(len(x_matrixs)):
 
 np_file = ('%s/np/main.np' % base_dir)
 np.save(np_file, (np.array(final_result), np.array(vocabrary)))
+
+for key, value in vocabrary.items():
+  print("%s\t%s" % (key.encode('utf-8'), value))
