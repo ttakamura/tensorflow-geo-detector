@@ -24,7 +24,9 @@ def placeholders():
 
 def optimizer(loss):
   with tf.variable_scope('optimize') as scope:
-    optimizer = tf.train.AdamOptimizer(learning_rate=FLAGS.learning_rate).minimize(loss)
+    total_loss = tf.add_n(loss, name='total_loss')
+    adam       = tf.train.AdamOptimizer(learning_rate=FLAGS.learning_rate)
+    optimizer  = adam.minimize(total_loss)
   return optimizer
 
 def accuracy(pred, y):
