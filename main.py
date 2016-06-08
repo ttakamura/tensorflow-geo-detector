@@ -65,6 +65,12 @@ def main(argv=None):
   assert_y_row(test_y_data)
   assert_z_row(train_z_data)
   assert_z_row(test_z_data)
+  print('train_x_data', train_x_data.shape)
+  print('test_x_data',  test_x_data.shape)
+  print('train_y_data', train_y_data.shape)
+  print('test_y_data',  test_y_data.shape)
+  print('train_z_data', train_z_data.shape)
+  print('test_z_data',  test_z_data.shape)
 
   x, y = model.placeholders()
   pred, loss, initial_state, final_state = model.RNN(x, y)
