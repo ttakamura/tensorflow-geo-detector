@@ -54,6 +54,10 @@ def LSTM(x, y):
       pred = tf.matmul(output, W_out) + b_out
       predictions.append(pred)
       current_y = y[i]
+
+      print(pred)
+      print(current_y)
+
       loss = tf.nn.softmax_cross_entropy_with_logits(pred, current_y)
       cost = tf.reduce_mean(loss)
       cost_all.append(cost)
