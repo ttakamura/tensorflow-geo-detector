@@ -17,12 +17,12 @@ tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
 tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
 def assert_x_row(row):
-  assert type(row) == scipy.sparse.lil.lil_matrix
+  assert type(row) == np.ndarray
   assert row.shape[0] == FLAGS.steps
   assert row.shape[1] == FLAGS.vocab_size
 
 def assert_y_row(row):
-  assert type(row) == scipy.sparse.lil.lil_matrix
+  assert type(row) == np.ndarray
   assert row.shape[0] == FLAGS.steps
   assert row.shape[1] == FLAGS.out_size
 
@@ -44,6 +44,7 @@ def main(argv=None):
   allx, ally, allz = reader.load_train_data(ids, FLAGS.data_dir, FLAGS.batch_size, FLAGS.steps)
   assert_all_data(allx, ally, allz)
   train_data, test_data = reader.split_data(all_data)
+
   print(train_data)
   print(test_data)
   1 / 0

@@ -73,16 +73,14 @@ final_result = list()
 for id, step, token, hash, category in open_csv(doc_dir, csv_file):
   i = id - 1
   if len(x_matrixs) == i:
-    x_matrixs.append(lil_matrix(shape))
-    y_matrixs.append(lil_matrix(yshape))
-    z_matrixs.append(lil_matrix(zshape))
+    x_matrixs.append(np.zeros(shape))
+    y_matrixs.append(np.zeros(yshape))
+    z_matrixs.append(np.zeros(zshape))
     final_result.append([id, hash, category])
     hash_map[i] = hash
   x_matrixs[i][step, vocabrary[token]] = 1.0
   y_matrixs[i][step, category] = 1.0
   z_matrixs[i][step, 0] = vocabrary[token]
-  # if category > 0:
-  #   print(category, token, step, y_matrixs[i].todense()[step, :])
 
 for i in range(len(x_matrixs)):
   np_file = ('%s/np/%s' % (base_dir, hash_map[i]))
