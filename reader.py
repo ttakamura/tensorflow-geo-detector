@@ -14,10 +14,12 @@ def load_train_data(ids, xdata, ydata, zdata, batch_size):
   xdata = xdata[0:last_id]
   xdata = xdata.reshape(-1, FLAGS.batch_size, FLAGS.steps, FLAGS.vocab_size)
 
-  ydata = np.array(ydata)[0:last_id]
+  ydata = np.array(ydata).reshape(-1, FLAGS.out_size)
+  ydata = ydata[0:last_id]
   ydata = ydata.reshape(-1, FLAGS.batch_size, FLAGS.steps, FLAGS.out_size)
 
-  zdata = np.array(zdata).astype(np.int32)[0:last_id]
+  zdata = np.array(zdata).astype(np.int32).reshape(-1, 1)
+  zdata = zdata[0:last_id]
   zdata = zdata.reshape(-1, FLAGS.batch_size, FLAGS.steps, 1)
 
   return xdata, ydata, zdata
