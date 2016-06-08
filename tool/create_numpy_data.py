@@ -18,7 +18,7 @@ max_step  = 0
 max_vocab = 0
 
 def add_vocab(text):
-  if not vocabrary.has_key(text):
+  if not text in vocabrary:
     vocabrary[text] = len(vocabrary)
     vocab_counter[text] = 1
   else:
