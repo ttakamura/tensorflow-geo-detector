@@ -48,12 +48,6 @@ def main(argv=None):
   assert_all_data(allx, ally, allz)
 
   train_x_data, test_x_data, train_y_data, test_y_data = reader.split_data(allx, ally)
-  print(train_x_data.shape)
-  print(test_x_data.shape)
-  print(train_y_data.shape)
-  print(test_y_data.shape)
-  print("Over")
-  1 / 0
 
   x, y = model.placeholders()
 
@@ -66,13 +60,17 @@ def main(argv=None):
     sess.run(tf.initialize_all_variables())
 
     for step in range(FLAGS.loop_num):
-      batch_x = train_data[step]['x']
-      sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
+      for i in range(train_x_data.shape[0]):
+        batch_x = train_x_data[i]
+        batch_y = train_y_data[i]
+        print(batch_x.shape)
+        print(batch_y.shape)
+        sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
 
-      if step > 0:
-        acc  = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
-        loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
-        print("step %d , acc %f" % (step, acc))
+      #if step > 0:
+      #  acc  = sess.run(accuracy, feed_dict={x: batch_x, y: batch_y})
+      #  loss = sess.run(cost, feed_dict={x: batch_x, y: batch_y})
+      #  print("step %d , acc %f" % (step, acc))
 
       ## Calculate accuracy for 128 mnist test images
       #test_len = 128
