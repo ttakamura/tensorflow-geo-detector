@@ -11,7 +11,7 @@ tf.app.flags.DEFINE_string("data_dir",     "tabelog_final_s",  "dir")
 tf.app.flags.DEFINE_float("learning_rate", 0.01,              "Learning rate.")
 tf.app.flags.DEFINE_integer("loop_num",    10,                 "Number of train.")
 tf.app.flags.DEFINE_integer("batch_size",  100,                "batch.")
-tf.app.flags.DEFINE_integer("steps",       105,               "max_step")
+tf.app.flags.DEFINE_integer("steps",       50,                 "max_step")
 tf.app.flags.DEFINE_integer("vocab_size",  98,                "vocaburary")
 tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
 tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
@@ -20,25 +20,28 @@ def assert_x_row(row):
   print('allx', row.shape)
   assert type(row) == np.ndarray
   assert row.dtype == np.float64
-  assert row.shape[0] == FLAGS.batch_size
-  assert row.shape[1]  > FLAGS.steps
-  assert row.shape[2] == FLAGS.vocab_size
+  assert row.shape[0]  > 10 # num of data
+  assert row.shape[1] == FLAGS.batch_size
+  assert row.shape[2] == FLAGS.steps
+  assert row.shape[3] == FLAGS.vocab_size
 
 def assert_y_row(row):
   print('ally', row.shape)
   assert type(row) == np.ndarray
   assert row.dtype == np.float64
-  assert row.shape[0] == FLAGS.batch_size
-  assert row.shape[1]  > FLAGS.steps
-  assert row.shape[2] == FLAGS.out_size
+  assert row.shape[0]  > 10 # num of data
+  assert row.shape[1] == FLAGS.batch_size
+  assert row.shape[2] == FLAGS.steps
+  assert row.shape[3] == FLAGS.out_size
 
 def assert_z_row(row):
   print('allz', row.shape)
   assert type(row) == np.ndarray
   assert row.dtype == np.int32
-  assert row.shape[0] == FLAGS.batch_size
-  assert row.shape[1]  > FLAGS.steps
-  assert row.shape[2] == 1
+  assert row.shape[0]  > 10 # num of data
+  assert row.shape[1] == FLAGS.batch_size
+  assert row.shape[2] == FLAGS.steps
+  assert row.shape[3] == 1
 
 def assert_all_data(allx, ally, allz):
   assert type(allx) == np.ndarray
