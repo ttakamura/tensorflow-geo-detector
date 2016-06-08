@@ -18,8 +18,8 @@ def bias_variable(shape):
 
 def placeholders():
   with tf.variable_scope('placeholder') as scope:
-    x = tf.placeholder("int",   [None, FLAGS.steps, 1],              name='X')
-    y = tf.placeholder("float", [None, FLAGS.steps, FLAGS.out_size], name='Y')
+    x = tf.placeholder(np.int32,   [None, FLAGS.steps, 1],              name='X')
+    y = tf.placeholder(np.float32, [None, FLAGS.steps, FLAGS.out_size], name='Y')
   return x, y
 
 def optimizer(loss):
