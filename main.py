@@ -76,7 +76,7 @@ def main(argv=None):
   print('test_z_data',  test_z_data.shape)
 
   x, y       = model.placeholders()
-  pred, loss = model.LSTM(x, y, FLAGS.steps)
+  pred, loss = model.LSTM(x, y)
   optimizer  = model.optimizer(loss)
   accuracy   = model.accuracy(pred, y)
 
