@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import scipy
 import reader
 import model
 
@@ -7,16 +8,46 @@ FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string("mode",         "train",            "train")
 tf.app.flags.DEFINE_string("data_dir",     "tabelog_final_s",  "dir")
-tf.app.flags.DEFINE_float("learning_rate", 0.001,              "Learning rate.")
-tf.app.flags.DEFINE_integer("loop_num",    64,                 "Number of train.")
+tf.app.flags.DEFINE_float("learning_rate", 0.01,              "Learning rate.")
+tf.app.flags.DEFINE_integer("loop_num",    10,                 "Number of train.")
 tf.app.flags.DEFINE_integer("batch_size",  100,                "batch.")
-tf.app.flags.DEFINE_integer("steps",       1000,               "max_step")
-tf.app.flags.DEFINE_integer("vocab_size",  100,                "vocaburary")
+tf.app.flags.DEFINE_integer("steps",       105,               "max_step")
+tf.app.flags.DEFINE_integer("vocab_size",  4230,                "vocaburary")
 tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
 tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
+def assert_x_row(row):
+  assert type(row) == scipy.sparse.lil.lil_matrix
+  print(row.shape[1], FLAGS.steps)
+  assert row.shape[1] == FLAGS.steps
+  assert row.shape[2] == FLAGS.vocab_size
+
+def assert_y_row(row):
+  assert type(row) == scipy.sparse.lil.lil_matrix
+  assert row.shape[1] == FLAGS.steps
+  assert row.shape[2] == FLAGS.out_size
+
+def assert_all_data(allx, ally, allz):
+  batch_num = len(allx)
+  assert type(allx) == list
+  assert type(ally) == list
+  assert type(allz) == list
+  assert batch_num == len(ally)
+  assert batch_num == len(allz)
+  assert_x_row(allx[0])
+  assert_x_row(allx[10])
+  assert_y_row(ally[0])
+  assert_y_row(ally[10])
+
 def main(argv=None):
-  ids, vocabrary = reader.load_master_data(FLAGS.data_dir)
+  ids, vocabrary   = reader.load_master_data(FLAGS.data_dir)
+  allx, ally, allz = reader.load_train_data(ids, FLAGS.data_dir, FLAGS.batch_size, FLAGS.steps)
+  assert_all_data(allx, ally, allz)
+
+  train_data, test_data = reader.split_data(all_data)
+  print(train_data)
+  print(test_data)
+  1 / 0
 
   x, y = model.placeholders()
 
@@ -27,11 +58,6 @@ def main(argv=None):
 
   with tf.Session() as sess:
     sess.run(tf.initialize_all_variables())
-
-    train_data, test_data = reader.load_train_data(ids, FLAGS.data_dir, FLAGS.batch_size)
-    print(train_data)
-    print(test_data)
-    1 / 0
 
     for step in range(FLAGS.loop_num):
       batch_x = train_data[step]['x']

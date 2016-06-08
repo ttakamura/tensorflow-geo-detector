@@ -1,18 +1,27 @@
 import numpy as np
 
-def load_train_data(ids, data_dir, batch_size):
+def load_train_data(ids, data_dir, batch_size, step_size):
   np.random.shuffle(ids)
-  data_num   = len(ids)
-  train_num  = floor(data_num * 0.7)
-  test_num   = floor(data_num * 1.0)
+  data_num = len(ids)
+  x_data   = list()
+  y_data   = list()
+  z_data   = list()
+  for id, hash, category in ids:
+    x, y, z = load_doc_data(hash, data_dir)
+    x_data.append(x)
+    y_data.append(y)
+    z_data.append(z)
+  return x_data, y_data, z_data
+
+def split_data(data):
+  data_num   = len(data)
+  train_num  = int(data_num * 0.7)
+  test_num   = int(data_num * 1.0)
   train_data = list()
   test_data  = list()
 
   for id, hash, category in ids[0:train_num]:
     x, y, z = load_doc_data(hash, data_dir)
-    print(x.shape)
-    print(y.shape)
-    print(z.shape)
     train_data.append({ 'x':x, 'y':y, 'z':z })
 
   for id, hash, category in ids[train_num:test_num]:

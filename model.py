@@ -54,7 +54,7 @@ def RNN(x, y, steps):
         output, state = lstm_cell(x[time_step], state)
 
         with tf.variable_scope('output_%s' % time_step) as scope:
-          output = tf.matmul(output, W) + b
+          output = tf.matmul(output, W_out) + b_out
           loss  += tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(output, y[time_step]))
           outputs.append(output)
 
