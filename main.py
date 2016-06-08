@@ -42,7 +42,7 @@ def assert_all_data(allx, ally, allz):
 def main(argv=None):
   xdata, ydata, zdata, ids, vocabrary = reader.load_master_data(FLAGS.data_dir)
 
-  allx, ally, allz = reader.load_train_data(ids, FLAGS.batch_size)
+  allx, ally, allz = reader.load_train_data(ids, xdata, ydata, zdata, FLAGS.batch_size)
   assert_all_data(allx, ally, allz)
 
   train_data, test_data = reader.split_data(all_data)

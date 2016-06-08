@@ -11,14 +11,18 @@ def long_sequence_to_batch(sequence, batch_size):
   x_data.append(x_batch)
   return x_data
 
-def load_train_data(ids, batch_size):
+def load_train_data(ids, xdata, ydata, zdata, batch_size):
   np.random.shuffle(ids)
   data_num = len(ids)
   x_data   = list()
   y_data   = list()
   z_data   = list()
   for id, hash, category in ids:
-    x, y, z = load_doc_data(hash, data_dir)
+    print(xdata)
+    1/0
+    x = 1
+    y = 2
+    z = 3
     x_data += long_sequence_to_batch(x, batch_size)
     y_data += long_sequence_to_batch(y, batch_size)
     z_data += long_sequence_to_batch(z, batch_size)
