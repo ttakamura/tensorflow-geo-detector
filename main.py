@@ -12,7 +12,7 @@ tf.app.flags.DEFINE_float("learning_rate", 0.01,              "Learning rate.")
 tf.app.flags.DEFINE_integer("loop_num",    10,                 "Number of train.")
 tf.app.flags.DEFINE_integer("batch_size",  100,                "batch.")
 tf.app.flags.DEFINE_integer("steps",       105,               "max_step")
-tf.app.flags.DEFINE_integer("vocab_size",  4230,                "vocaburary")
+tf.app.flags.DEFINE_integer("vocab_size",  98,                "vocaburary")
 tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
 tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
