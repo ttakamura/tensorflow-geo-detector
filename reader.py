@@ -17,12 +17,10 @@ def load_train_data(ids, xdata, ydata, zdata, batch_size):
   x_data   = list()
   y_data   = list()
   z_data   = list()
-  for id, hash, category in ids:
-    print(xdata)
-    1/0
-    x = 1
-    y = 2
-    z = 3
+  for i in range(len(xdata)):
+    x = xdata[i]
+    y = ydata[i]
+    z = zdata[i]
     x_data += long_sequence_to_batch(x, batch_size)
     y_data += long_sequence_to_batch(y, batch_size)
     z_data += long_sequence_to_batch(z, batch_size)
