@@ -57,7 +57,7 @@ def RNN(x, weights, biases):
   # Linear activation, using rnn inner loop last output
   return tf.matmul(outputs[-1], weights['out']) + biases['out']
 
-def LSTM(x, y, steps):
+def LSTM(x, y):
   x, y  = reshape(x, y, 1)
   W_out = weight_variable([FLAGS.hidden_size, FLAGS.out_size])
   b_out = bias_variable([FLAGS.out_size])
