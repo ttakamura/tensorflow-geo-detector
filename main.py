@@ -19,6 +19,7 @@ tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 def assert_x_row(row):
   print(type(row))
   print(len(row))
+  print(type(row[0]))
   print(len(row[0].shape))
   assert type(row) == np.ndarray
   assert row.shape[0] == FLAGS.steps
