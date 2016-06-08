@@ -43,7 +43,7 @@ def RNN(x, y, steps):
 
   with tf.variable_scope('embedId') as scope:
     with tf.device("/cpu:0"):
-      embeddings = tf.Variable(tf.random_uniform([vocabulary_size, embedding_size], -1.0, 1.0), name='embedding')
+      embeddings = tf.Variable(tf.random_uniform([FLAGS.vocab_size, embedding_size], -1.0, 1.0), name='embedding')
       inputs = tf.nn.embedding_lookup(embeddings, x)
 
   with tf.variable_scope('lstm1') as scope:
