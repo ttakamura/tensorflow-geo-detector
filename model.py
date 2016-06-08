@@ -37,26 +37,6 @@ def accuracy(pred, y):
     accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
   return accuracy
 
-def RNN(x, weights, biases):
-  # Prepare data shape to match `rnn` function requirements
-  # Current data input shape: (batch_size, n_steps, n_input)
-  # Permuting batch_size and n_steps
-  x = tf.transpose(x, [1, 0, 2])
-  # Reshaping to (n_steps*batch_size, n_input)
-  x = tf.reshape(x, [-1, n_input])
-  # Split to get a list of 'n_steps' tensors of shape (batch_size, n_hidden)
-  # This input shape is required by `rnn` function
-  x = tf.split(0, n_steps, x)
-
-  # Define a lstm cell with tensorflow
-  lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0)
-
-  # Get lstm cell output
-  outputs, states = rnn.rnn(lstm_cell, x, dtype=tf.float32)
-
-  # Linear activation, using rnn inner loop last output
-  return tf.matmul(outputs[-1], weights['out']) + biases['out']
-
 def LSTM(x, y):
   x, y  = reshape(x, y, 1)
   W_out = weight_variable([FLAGS.hidden_size, FLAGS.out_size])
