@@ -40,9 +40,11 @@ def assert_all_data(allx, ally, allz):
   assert_y_row(ally[10])
 
 def main(argv=None):
-  ids, vocabrary   = reader.load_master_data(FLAGS.data_dir)
-  allx, ally, allz = reader.load_train_data(ids, FLAGS.data_dir, FLAGS.batch_size, FLAGS.steps)
+  xdata, ydata, zdata, ids, vocabrary = reader.load_master_data(FLAGS.data_dir)
+
+  allx, ally, allz = reader.load_train_data(ids, FLAGS.batch_size)
   assert_all_data(allx, ally, allz)
+
   train_data, test_data = reader.split_data(all_data)
 
   print(train_data)

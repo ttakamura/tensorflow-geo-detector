@@ -11,7 +11,7 @@ def long_sequence_to_batch(sequence, batch_size):
   x_data.append(x_batch)
   return x_data
 
-def load_train_data(ids, data_dir, batch_size, step_size):
+def load_train_data(ids, batch_size):
   np.random.shuffle(ids)
   data_num = len(ids)
   x_data   = list()
@@ -31,23 +31,22 @@ def split_data(data):
   train_data = list()
   test_data  = list()
 
-  for id, hash, category in ids[0:train_num]:
-    x, y, z = load_doc_data(hash, data_dir)
-    train_data.append({ 'x':x, 'y':y, 'z':z })
+  for row in data[0:train_num]:
+    train_data.append(row)
 
-  for id, hash, category in ids[train_num:test_num]:
-    x, y, z = load_doc_data(hash, data_dir)
-    test_data.append({ 'x':x, 'y':y, 'z':z })
+  for row in data[train_num:test_num]:
+    test_data.append(row)
 
   return train_data, test_data
 
-def load_doc_data(hash, data_dir):
-  if type(hash) == bytes:
-    hash = hash.decode('utf-8')
-  x, y, z = np.load("%s/np/%s.npy" % (data_dir, hash))
-  return x, y, z
-
 def load_master_data(data_dir):
-  ids, vocabrary = np.load("%s/np/main.np.npy" % data_dir)
+  x, y, z, ids, vocabrary = np.load("%s/np/main.np.npy" % data_dir)
   np.random.shuffle(ids)
-  return ids, vocabrary
+  return x, y, z, ids, vocabrary
+
+
+# def load_doc_data(hash, data_dir):
+#   if type(hash) == bytes:
+#     hash = hash.decode('utf-8')
+#   x, y, z = np.load("%s/np/%s.npy" % (data_dir, hash))
+#   return x, y, z
