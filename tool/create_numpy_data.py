@@ -56,7 +56,11 @@ for id, step, token, hash, category in open_csv(doc_dir, csv_file):
   add_vocab(token)
 
 def reduce_vocabrary(vocabrary, minimum_vocab):
-  return dict([(k,v) for k,v in vocabrary.items() if vocab_counter[k] > minimum_vocab])
+  new_vocab = {}
+  for k,v in vocabrary.items():
+    if vocab_counter[k] > minimum_vocab]:
+      new_vocab[k] = len(new_vocab)
+  return new_vocab
 
 def get_vocab_id(vocabrary, key):
   if key in vocabrary:
