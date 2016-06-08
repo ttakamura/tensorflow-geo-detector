@@ -89,9 +89,9 @@ for id, step, token, hash, category in open_csv(doc_dir, csv_file):
     z_matrixs.append(np.zeros(zshape))
     final_result.append([id, hash, category])
     hash_map[i] = hash
-  x_matrixs[i][step, get_vocab_id(token)] = 1.0
+  x_matrixs[i][step, get_vocab_id(vocabrary, token)] = 1.0
   y_matrixs[i][step, category] = 1.0
-  z_matrixs[i][step, 0] = get_vocab_id(token)
+  z_matrixs[i][step, 0] = get_vocab_id(vocabrary, token)
 
 for i in range(len(x_matrixs)):
   np_file = ('%s/np/%s' % (base_dir, hash_map[i]))
