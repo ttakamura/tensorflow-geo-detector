@@ -4,20 +4,19 @@ def load_train_data(ids, xdata, ydata, zdata, batch_size):
   xdata = np.array(xdata)
   ydata = np.array(ydata)
   zdata = np.array(zdata).astype(np.int32)
-  # TODO
-  # np.random.shuffle(ids)
   return xdata, ydata, zdata
 
 def split_data(allx, ally, allz):
-  data_num     = len(allx)
-  train_num    = int(data_num * 0.7)
-  test_num     = int(data_num * 1.0)
-  train_x_data = list()
-  test_x_data  = list()
-  train_y_data = list()
-  test_y_data  = list()
-  train_z_data = list()
-  test_z_data  = list()
+  batch_num = allx.shape[0]
+  train_num = int(batch_num * 0.7) * FLAGS.batch_size
+  test_num  = int(batch_num * 1.0) * FLAGS.batch_size
+  print('train_num', train_num)
+  print('test_num', test_num)
+  # TODO: random shuffle
+
+  allx = allx.reshape(-1, FLAGS.vocab_size)
+  ally = ally.reshape(-1, FLAGS.out_size)
+  allz = allz.reshape(-1, 1)
 
   train_x_data = allx[0:train_num]
   test_x_data  = allx[train_num:test_num]
