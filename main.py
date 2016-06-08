@@ -24,6 +24,7 @@ def assert_x_row(row):
   assert row.shape[2] == FLAGS.vocab_size
 
 def assert_y_row(row):
+  print(row.shape)
   assert type(row) == np.ndarray
   assert row.shape[0] > 1 # batch_size
   assert row.shape[1] == FLAGS.steps
@@ -37,10 +38,8 @@ def assert_all_data(allx, ally, allz):
   assert batch_num > 10
   assert batch_num == len(ally)
   assert batch_num == len(allz)
-  assert_x_row(allx[0])
-  assert_x_row(allx[10])
-  assert_y_row(ally[0])
-  assert_y_row(ally[10])
+  assert_x_row(allx)
+  assert_y_row(ally)
 
 def main(argv=None):
   xdata, ydata, zdata, ids, vocabrary = reader.load_master_data(FLAGS.data_dir)
