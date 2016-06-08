@@ -53,6 +53,8 @@ def LSTM(x, y):
       output = outputs[i]
       pred = tf.matmul(output, W_out) + b_out
       predictions.append(pred)
+      print(pred.get_shape())
+
       current_y = y[i]
 
       # tensorflow.python.pywrap_tensorflow.StatusNotOK: Invalid argument: logits and labels must be same size: logits_size=[9800,3] labels_size=[100,3]
