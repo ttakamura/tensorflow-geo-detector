@@ -32,10 +32,6 @@ def split_data(allx, ally, allz):
   print('test_num', test_num)
   # TODO: random shuffle
 
-  allx = allx.reshape(-1, FLAGS.vocab_size)
-  ally = ally.reshape(-1, FLAGS.out_size)
-  allz = allz.reshape(-1, 1)
-
   train_x_data = allx[0:train_num]
   test_x_data  = allx[train_num:test_num]
 
