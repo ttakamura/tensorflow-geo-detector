@@ -12,9 +12,6 @@ doc_dir  = ('%s/docs/' % base_dir)
 
 vocabrary     = {}
 vocab_counter = {}
-add_vocab('<UNK>')
-vocab_counter['<UNK>'] = 100000
-print(vocabrary)
 
 data_num  = 0
 max_step  = 0
@@ -27,6 +24,9 @@ def add_vocab(text):
   else:
     vocab_counter[text] += 1
   return vocabrary[text]
+
+add_vocab('<UNK>')
+vocab_counter['<UNK>'] = 100000
 
 def open_csv(doc_dir, csv_file):
   global data_num
@@ -56,7 +56,7 @@ for id, step, token, hash, category in open_csv(doc_dir, csv_file):
   add_vocab(token)
 
 def reduce_vocabrary(vocabrary, minimum_vocab):
-  return dict([(k,v) for k,v in vocabrary.items() if v > minimum_vocab])
+  return dict([(k,v) for k,v in vocabrary.items() if vocab_counter[k] > minimum_vocab])
 
 def get_vocab_id(vocabrary, key):
   if key in vocabrary:
