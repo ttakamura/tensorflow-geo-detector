@@ -41,7 +41,8 @@ def open_csv(doc_dir, csv_file):
           step += 1
           if len(tsv_row) == 2:
             token, category = tsv_row
-            token = token.decode('utf-8')
+            if type(token) == bytes:
+              token = token.decode('utf-8')
             yield data_num, step, token, hash, int(category)
           else:
             yield data_num, step, "", "", int(category)
