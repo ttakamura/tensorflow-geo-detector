@@ -28,7 +28,7 @@ def split_data(allx, ally, allz):
   train_z_data = allz[0:train_num]
   test_z_data  = allz[train_num:test_num]
 
-  return train_x_data, test_x_data, train_y_data, test_y_data
+  return train_x_data, test_x_data, train_y_data, test_y_data, train_z_data, test_z_data
 
 def load_master_data(data_dir):
   x, y, z, ids, vocabrary = np.load("%s/np/main.np.npy" % data_dir)
