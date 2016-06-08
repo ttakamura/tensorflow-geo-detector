@@ -6,7 +6,7 @@ import numpy as np
 from scipy.sparse import *
 import csv
 
-base_dir = 'tabelog_final_s/'
+base_dir = 'tabelog_final_s'
 csv_file = ('%s/data.csv' % base_dir)
 doc_dir  = ('%s/docs/' % base_dir)
 
