@@ -53,8 +53,7 @@ for id, step, token, hash, category in open_csv(doc_dir, csv_file):
   add_vocab(token)
 
 def reduce_vocabrary(vocabrary):
-  print(vocabrary)
-  return vocabrary
+  return dict([(k,v) for k,v in vocabrary.items() if v > 10000])
 
 vocabrary   = reduce_vocabrary(vocabrary)
 max_vocab   = len(vocabrary)
@@ -62,8 +61,7 @@ x_data_num  = data_num
 x_max_step  = max_step + 1
 x_max_vocab = max_vocab
 
-print(x_max_vocab)
-
+print(x_max_step, x_max_vocab)
 1 / 0
 
 shape     = (x_max_step, x_max_vocab)
