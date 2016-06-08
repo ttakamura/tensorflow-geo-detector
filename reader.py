@@ -1,5 +1,7 @@
 import numpy as np
 
+FLAGS = tf.app.flags.FLAGS
+
 def load_train_data(ids, xdata, ydata, zdata, batch_size):
   one_batch_size = FLAGS.batch_size * FLAGS.steps
 
