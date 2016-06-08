@@ -59,15 +59,15 @@ def LSTM(x, y):
       pred      = tf.matmul(output, W_out) + b_out
       current_y = y[i]
 
-      # tensorflow.python.pywrap_tensorflow.StatusNotOK:
-      # Invalid argument: logits and labels must be same size:
-      # logits_size=[9800,3]
-      # labels_size=[100,3]
-      loss = tf.nn.softmax_cross_entropy_with_logits(pred, current_y)
-
-      cost = tf.reduce_mean(loss)
-      cost_all.append(cost)
-      predictions.append(pred)
+      # # tensorflow.python.pywrap_tensorflow.StatusNotOK:
+      # # Invalid argument: logits and labels must be same size:
+      # # logits_size=[9800,3]
+      # # labels_size=[100,3]
+      # loss = tf.nn.softmax_cross_entropy_with_logits(pred, current_y)
+      #
+      # cost = tf.reduce_mean(loss)
+      # cost_all.append(cost)
+      # predictions.append(pred)
   return predictions, cost_all
 
 # ------- reshaping -----------------------------------
