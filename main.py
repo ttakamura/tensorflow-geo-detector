@@ -17,14 +17,14 @@ tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
 tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
 def assert_x_row(row):
-  print(row.shape)
+  # print(row.shape)
   assert type(row) == np.ndarray
   assert row.shape[0] == FLAGS.batch_size
   assert row.shape[1]  > FLAGS.steps
   assert row.shape[2] == FLAGS.vocab_size
 
 def assert_y_row(row):
-  print(row.shape)
+  # print(row.shape)
   assert type(row) == np.ndarray
   assert row.shape[0] == FLAGS.batch_size
   assert row.shape[1]  > FLAGS.steps
