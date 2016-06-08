@@ -17,15 +17,25 @@ tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
 tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
 def assert_x_row(row):
-  # print(row.shape)
+  print('allx', row.shape)
   assert type(row) == np.ndarray
+  assert row.dtype == np.float64
   assert row.shape[0] == FLAGS.batch_size
   assert row.shape[1]  > FLAGS.steps
   assert row.shape[2] == FLAGS.vocab_size
 
 def assert_y_row(row):
-  # print(row.shape)
+  print('ally', row.shape)
   assert type(row) == np.ndarray
+  assert row.dtype == np.float64
+  assert row.shape[0] == FLAGS.batch_size
+  assert row.shape[1]  > FLAGS.steps
+  assert row.shape[2] == FLAGS.out_size
+
+def assert_z_row(row):
+  print('allz', row.shape)
+  assert type(row) == np.ndarray
+  assert row.dtype == np.int32
   assert row.shape[0] == FLAGS.batch_size
   assert row.shape[1]  > FLAGS.steps
   assert row.shape[2] == FLAGS.out_size
@@ -40,6 +50,7 @@ def assert_all_data(allx, ally, allz):
   assert batch_num == len(allz)
   assert_x_row(allx)
   assert_y_row(ally)
+  assert_z_row(allz)
 
 def main(argv=None):
   xdata, ydata, zdata, ids, vocabrary = reader.load_master_data(FLAGS.data_dir)
@@ -47,7 +58,13 @@ def main(argv=None):
   allx, ally, allz = reader.load_train_data(ids, xdata, ydata, zdata, FLAGS.batch_size)
   assert_all_data(allx, ally, allz)
 
-  train_x_data, test_x_data, train_y_data, test_y_data = reader.split_data(allx, ally)
+  train_x_data, test_x_data, train_y_data, test_y_data, train_z_data, test_z_data = reader.split_data(allx, ally, allz)
+  assert_x_row(train_x_data)
+  assert_x_row(test_x_data)
+  assert_y_row(train_y_data)
+  assert_y_row(test_y_data)
+  assert_z_row(train_z_data)
+  assert_z_row(test_z_data)
 
   x, y = model.placeholders()
 
