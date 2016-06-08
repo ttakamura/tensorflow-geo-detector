@@ -39,6 +39,12 @@ def accuracy(pred, y):
 
 def RNN(x, y, steps):
   x, y = reshape(x, y)
+  embedding_size = FLAGS.hidden_size
+
+  with tf.variable_scope('embedId') as scope:
+    with tf.device("/cpu:0"):
+      embeddings = tf.Variable(tf.random_uniform([vocabulary_size, embedding_size], -1.0, 1.0), name='embedding')
+      inputs = tf.nn.embedding_lookup(embeddings, x)
 
   with tf.variable_scope('lstm1') as scope:
     lstm_cell = rnn_cell.BasicLSTMCell(FLAGS.hidden_size, forget_bias=1.0)
@@ -51,7 +57,7 @@ def RNN(x, y, steps):
     with tf.variable_scope("RNN"):
       for time_step in range(steps):
         if time_step > 0: tf.get_variable_scope().reuse_variables()
-        output, state = lstm_cell(x[time_step], state)
+        output, state = lstm_cell(inputs[time_step], state)
 
         with tf.variable_scope('output_%s' % time_step) as scope:
           output = tf.matmul(output, W_out) + b_out
