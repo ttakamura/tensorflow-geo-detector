@@ -47,6 +47,7 @@ def main(argv=None):
 
   print(train_data)
   print(test_data)
+  print("Over")
   1 / 0
 
   x, y = model.placeholders()
