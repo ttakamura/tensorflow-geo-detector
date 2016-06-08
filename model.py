@@ -69,7 +69,6 @@ def RNN(x, y, steps):
   return pred, loss, initial_state, final_state
 
 # ------- reshaping -----------------------------------
-
 def assert_shape(x,y):
   xshape = x.get_shape()
   xshape[0].assert_is_compatible_with(FLAGS.batch_size)

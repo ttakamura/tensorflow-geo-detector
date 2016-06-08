@@ -18,20 +18,22 @@ tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
 def assert_x_row(row):
   assert type(row) == scipy.sparse.lil.lil_matrix
-  print(row.shape[1], FLAGS.steps)
-  assert row.shape[1] == FLAGS.steps
-  assert row.shape[2] == FLAGS.vocab_size
+  print(row.shape[0], FLAGS.steps)
+  assert row.shape[0] == FLAGS.steps
+  assert row.shape[1] == FLAGS.vocab_size
 
 def assert_y_row(row):
   assert type(row) == scipy.sparse.lil.lil_matrix
-  assert row.shape[1] == FLAGS.steps
-  assert row.shape[2] == FLAGS.out_size
+  assert row.shape[0] == FLAGS.steps
+  assert row.shape[1] == FLAGS.out_size
 
 def assert_all_data(allx, ally, allz):
   batch_num = len(allx)
   assert type(allx) == list
   assert type(ally) == list
   assert type(allz) == list
+  print(batch_num)
+  assert batch_num > 10
   assert batch_num == len(ally)
   assert batch_num == len(allz)
   assert_x_row(allx[0])

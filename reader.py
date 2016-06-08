@@ -1,5 +1,16 @@
 import numpy as np
 
+def long_sequence_to_batch(sequence, batch_size):
+  x_data  = list()
+  x_batch = list()
+  for row in sequence:
+    if len(x_batch) == batch_size:
+      x_data.append(x_batch)
+      x_batch = list()
+    x_batch.append(row)
+  x_data.append(x_batch)
+  return x_data
+
 def load_train_data(ids, data_dir, batch_size, step_size):
   np.random.shuffle(ids)
   data_num = len(ids)
@@ -8,9 +19,9 @@ def load_train_data(ids, data_dir, batch_size, step_size):
   z_data   = list()
   for id, hash, category in ids:
     x, y, z = load_doc_data(hash, data_dir)
-    x_data.append(x)
-    y_data.append(y)
-    z_data.append(z)
+    x_data += long_sequence_to_batch(x, batch_size)
+    y_data += long_sequence_to_batch(y, batch_size)
+    z_data += long_sequence_to_batch(z, batch_size)
   return x_data, y_data, z_data
 
 def split_data(data):
