@@ -75,10 +75,10 @@ def main(argv=None):
   print('train_z_data', train_z_data.shape)
   print('test_z_data',  test_z_data.shape)
 
-  x, y = model.placeholders()
-  pred, loss, initial_state, final_state = model.LSTM(x, y, FLAGS.steps)
-  optimizer = model.optimizer(loss)
-  accuracy  = model.accuracy(pred, y)
+  x, y       = model.placeholders()
+  pred, loss = model.LSTM(x, y, FLAGS.steps)
+  optimizer  = model.optimizer(loss)
+  accuracy   = model.accuracy(pred, y)
 
   with tf.Session() as sess:
     sess.run(tf.initialize_all_variables())
