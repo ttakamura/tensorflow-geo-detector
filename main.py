@@ -17,6 +17,7 @@ tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
 tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
 def assert_x_row(row):
+  print(row.shape)
   assert type(row) == np.ndarray
   assert row.shape[0] > 1 # batch_size
   assert row.shape[1] == FLAGS.steps
