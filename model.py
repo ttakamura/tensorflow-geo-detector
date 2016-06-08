@@ -64,7 +64,7 @@ def LSTM(x, y):
       # logits_size=[9800,3]
       # labels_size=[100,3]
 
-      gg = pred.reshape(98, FLAGS.batch_size, FLAGS.out_size)
+      gg = tf.reshape(pred, [98, FLAGS.batch_size, FLAGS.out_size])
 
       # I don't know これでうまくいく？
       loss = tf.nn.softmax_cross_entropy_with_logits(gg[0], current_y)
