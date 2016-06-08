@@ -37,7 +37,7 @@ def accuracy(pred, y):
     accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
   return accuracy
 
-def RNN(x, y):
+def RNN(x, y, steps):
   x, y = reshape(x, y, 1)
   embedding_size = FLAGS.hidden_size
 
