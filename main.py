@@ -18,7 +18,6 @@ tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
 def assert_x_row(row):
   assert type(row) == scipy.sparse.lil.lil_matrix
-  print(row.shape[0], FLAGS.steps)
   assert row.shape[0] == FLAGS.steps
   assert row.shape[1] == FLAGS.vocab_size
 
@@ -32,7 +31,6 @@ def assert_all_data(allx, ally, allz):
   assert type(allx) == list
   assert type(ally) == list
   assert type(allz) == list
-  print(batch_num)
   assert batch_num > 10
   assert batch_num == len(ally)
   assert batch_num == len(allz)
@@ -45,7 +43,6 @@ def main(argv=None):
   ids, vocabrary   = reader.load_master_data(FLAGS.data_dir)
   allx, ally, allz = reader.load_train_data(ids, FLAGS.data_dir, FLAGS.batch_size, FLAGS.steps)
   assert_all_data(allx, ally, allz)
-
   train_data, test_data = reader.split_data(all_data)
   print(train_data)
   print(test_data)
