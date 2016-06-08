@@ -2,7 +2,7 @@ import numpy as np
 
 import chainer
 # from chainer import computational_graph
-# from chainer import cuda
+from chainer import cuda
 import chainer.links as L
 from chainer import optimizers
 from chainer import serializers
