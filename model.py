@@ -67,6 +67,7 @@ def LSTM(x, y, steps):
     outputs, states = rnn.rnn(lstm_cell, x, dtype=tf.float32)
 
     print(outputs)
+    print(len(outputs))
 
     pred = tf.matmul(outputs, W_out) + b_out
     cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
