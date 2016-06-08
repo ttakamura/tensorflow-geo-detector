@@ -31,10 +31,10 @@ def assert_y_row(row):
   assert row.shape[1] == FLAGS.out_size
 
 def assert_all_data(allx, ally, allz):
-  batch_num = len(allx)
-  assert type(allx) == list
-  assert type(ally) == list
-  assert type(allz) == list
+  assert type(allx) == np.ndarray
+  assert type(ally) == np.ndarray
+  assert type(allz) == np.ndarray
+  batch_num = allx.shape[0]
   assert batch_num > 10
   assert batch_num == len(ally)
   assert batch_num == len(allz)
