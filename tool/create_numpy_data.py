@@ -10,8 +10,8 @@ base_dir = 'tabelog_final_s'
 csv_file = ('%s/data.csv' % base_dir)
 doc_dir  = ('%s/docs/' % base_dir)
 
-vocabrary     = {}
-vocab_counter = {}
+vocabrary     = {'<UNK>': 0}
+vocab_counter = {'<UNK>': 100000}
 
 data_num  = 0
 max_step  = 0
@@ -52,17 +52,21 @@ def open_csv(doc_dir, csv_file):
 for id, step, token, hash, category in open_csv(doc_dir, csv_file):
   add_vocab(token)
 
-def reduce_vocabrary(vocabrary):
-  return dict([(k,v) for k,v in vocabrary.items() if v > 10000])
+def reduce_vocabrary(vocabrary, minimum_vocab):
+  return dict([(k,v) for k,v in vocabrary.items() if v > minimum_vocab])
 
-vocabrary   = reduce_vocabrary(vocabrary)
-max_vocab   = len(vocabrary)
-x_data_num  = data_num
-x_max_step  = max_step + 1
-x_max_vocab = max_vocab
+def get_vocab_id(vocabrary, key):
+  if key in vocabrary:
+    return vocabrary[key]
+  else:
+    return vocabrary['<UNK>']
 
-print(x_max_step, x_max_vocab)
-1 / 0
+minimum_vocab = 2000 # 2000 回以上存在するコーパスのみ扱う
+vocabrary     = reduce_vocabrary(vocabrary, minimum_vocab)
+max_vocab     = len(vocabrary)
+x_data_num    = data_num
+x_max_step    = max_step + 1
+x_max_vocab   = max_vocab
 
 shape     = (x_max_step, x_max_vocab)
 yshape    = (x_max_step, 3)
@@ -85,9 +89,9 @@ for id, step, token, hash, category in open_csv(doc_dir, csv_file):
     z_matrixs.append(np.zeros(zshape))
     final_result.append([id, hash, category])
     hash_map[i] = hash
-  x_matrixs[i][step, vocabrary[token]] = 1.0
+  x_matrixs[i][step, get_vocab_id(token)] = 1.0
   y_matrixs[i][step, category] = 1.0
-  z_matrixs[i][step, 0] = vocabrary[token]
+  z_matrixs[i][step, 0] = get_vocab_id(token)
 
 for i in range(len(x_matrixs)):
   np_file = ('%s/np/%s' % (base_dir, hash_map[i]))
