@@ -18,8 +18,8 @@ def bias_variable(shape):
 
 def placeholders():
   with tf.variable_scope('placeholder') as scope:
-    x = tf.placeholder(np.int32,   [None, FLAGS.steps, 1],              name='X')
-    y = tf.placeholder(np.float32, [None, FLAGS.steps, FLAGS.out_size], name='Y')
+    x = tf.placeholder(np.float32, [None, FLAGS.steps, FLAGS.vocab_size], name='X')
+    y = tf.placeholder(np.float32, [None, FLAGS.steps, FLAGS.out_size],   name='Y')
   return x, y
 
 def optimizer(loss):
@@ -37,36 +37,38 @@ def accuracy(pred, y):
     accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
   return accuracy
 
-def RNN(x, y, steps):
-  x, y = reshape(x, y, 1)
-  embedding_size = FLAGS.hidden_size
+def RNN(x, weights, biases):
+  # Prepare data shape to match `rnn` function requirements
+  # Current data input shape: (batch_size, n_steps, n_input)
+  # Permuting batch_size and n_steps
+  x = tf.transpose(x, [1, 0, 2])
+  # Reshaping to (n_steps*batch_size, n_input)
+  x = tf.reshape(x, [-1, n_input])
+  # Split to get a list of 'n_steps' tensors of shape (batch_size, n_hidden)
+  # This input shape is required by `rnn` function
+  x = tf.split(0, n_steps, x)
 
-  with tf.variable_scope('embedId') as scope:
-    with tf.device("/cpu:0"):
-      embeddings = tf.Variable(tf.random_uniform([FLAGS.vocab_size, embedding_size], -1.0, 1.0), name='embedding')
+  # Define a lstm cell with tensorflow
+  lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=1.0)
+
+  # Get lstm cell output
+  outputs, states = rnn.rnn(lstm_cell, x, dtype=tf.float32)
+
+  # Linear activation, using rnn inner loop last output
+  return tf.matmul(outputs[-1], weights['out']) + biases['out']
+
+def LSTM(x, y, steps):
+  x, y  = reshape(x, y, 1)
+  W_out = weight_variable([FLAGS.hidden_size, FLAGS.out_size])
+  b_out = bias_variable([FLAGS.out_size])
 
   with tf.variable_scope('lstm1') as scope:
     lstm_cell = rnn_cell.BasicLSTMCell(FLAGS.hidden_size, forget_bias=1.0)
-    state     = tf.zeros([ FLAGS.batch_size, lstm_cell.state_size ])
-    W_out     = weight_variable([FLAGS.hidden_size, FLAGS.out_size])
-    b_out     = bias_variable([FLAGS.out_size])
-    loss      = 0.0
-    initial_state = state
+    outputs, states = rnn.rnn(lstm_cell, x, dtype=tf.float32)
+    pred = tf.matmul(outputs, W_out) + b_out
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
 
-    with tf.variable_scope("RNN"):
-      for time_step in range(steps):
-        inputs = tf.nn.embedding_lookup(embeddings, x[time_step])
-        if time_step > 0: tf.get_variable_scope().reuse_variables()
-        output, state = lstm_cell(inputs, state)
-
-        with tf.variable_scope('output_%s' % time_step) as scope:
-          output = tf.matmul(output, W_out) + b_out
-          cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(output, labels, name='cross_entropy')
-          loss += tf.reduce_mean(cross_entropy)
-          outputs.append(output)
-
-    final_state = state
-  return pred, loss, initial_state, final_state
+  return pred, cost
 
 # ------- reshaping -----------------------------------
 def assert_reshaped_x(x, vocab_size):
