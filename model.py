@@ -53,7 +53,6 @@ def LSTM(x, y):
       output = outputs[i]
       pred = tf.matmul(output, W_out) + b_out
       predictions.append(pred)
-      print(pred.get_shape())
 
       current_y = y[i]
 
