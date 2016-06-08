@@ -55,13 +55,9 @@ def LSTM(x, y):
       predictions.append(pred)
       current_y = y[i]
 
-      print(len(y))
-      print(len(outputs))
-      print(pred)
-      print(current_y)
       # tensorflow.python.pywrap_tensorflow.StatusNotOK: Invalid argument: logits and labels must be same size: logits_size=[9800,3] labels_size=[100,3]
-
       loss = tf.nn.softmax_cross_entropy_with_logits(pred, current_y)
+
       cost = tf.reduce_mean(loss)
       cost_all.append(cost)
   return predictions, cost_all
