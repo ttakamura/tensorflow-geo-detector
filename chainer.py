@@ -1,10 +1,11 @@
 import numpy as np
+
 import chainer
-from chainer import Function, gradient_check, Variable, optimizers, serializers, utils
-from chainer import Link, Chain, ChainList
-import chainer.functions as F
+from chainer import computational_graph
+from chainer import cuda
 import chainer.links as L
-import chainer
+from chainer import optimizers
+from chainer import serializers
 
 import numpy as np
 import scipy
