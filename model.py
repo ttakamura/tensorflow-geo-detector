@@ -33,7 +33,10 @@ def accuracy(pred, y):
   with tf.variable_scope('evaluate') as scope:
     correct_pred = list()
     for i in range(len(pred)):
-      correct_pred.append(tf.equal(tf.argmax(pred[i],1), tf.argmax(y[i],1)))
+      ptop = tf.argmax(pred[i],1)
+      ytop = tf.argmax(y[i],1)
+      eql  = tf.equal(ptop, ytop)
+      correct_pred.append(eql)
     accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
   return accuracy
 
