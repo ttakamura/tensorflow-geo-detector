@@ -47,9 +47,11 @@ def main(argv=None):
   allx, ally, allz = reader.load_train_data(ids, xdata, ydata, zdata, FLAGS.batch_size)
   assert_all_data(allx, ally, allz)
 
-  train_x_data, test_x_data = reader.split_data(allx)
-  print(train_x_data)
-  print(test_x_data)
+  train_x_data, test_x_data, train_y_data, test_y_data = reader.split_data(allx, ally)
+  print(train_x_data.shape)
+  print(test_x_data.shape)
+  print(train_y_data.shape)
+  print(test_y_data.shape)
   print("Over")
   1 / 0
 

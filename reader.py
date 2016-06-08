@@ -8,20 +8,28 @@ def load_train_data(ids, xdata, ydata, zdata, batch_size):
   # np.random.shuffle(ids)
   return xdata, ydata, zdata
 
-def split_data(data):
-  data_num   = len(data)
-  train_num  = int(data_num * 0.7)
-  test_num   = int(data_num * 1.0)
-  train_data = list()
-  test_data  = list()
+def split_data(allx, ally):
+  data_num     = len(allx)
+  train_num    = int(data_num * 0.7)
+  test_num     = int(data_num * 1.0)
+  train_x_data = list()
+  test_x_data  = list()
+  train_y_data = list()
+  test_y_data  = list()
 
-  for row in data[0:train_num]:
-    train_data.append(row)
+  for xrow in allx[0:train_num]:
+    train_x_data.append(xrow)
 
-  for row in data[train_num:test_num]:
-    test_data.append(row)
+  for xrow in allx[train_num:test_num]:
+    test_x_data.append(xrow)
 
-  return train_data, test_data
+  for yrow in ally[0:train_num]:
+    train_y_data.append(yrow)
+
+  for yrow in ally[train_num:test_num]:
+    test_y_data.append(yrow)
+
+  return train_x_data, test_x_data, train_y_data, test_y_data
 
 def load_master_data(data_dir):
   x, y, z, ids, vocabrary = np.load("%s/np/main.np.npy" % data_dir)
