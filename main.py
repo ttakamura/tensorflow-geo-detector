@@ -67,9 +67,7 @@ def main(argv=None):
   assert_z_row(test_z_data)
 
   x, y = model.placeholders()
-
-  pred, loss, initial_state, final_state = model.RNN(x, y, FLAGS.steps / FLAGS.batch_size)
-
+  pred, loss, initial_state, final_state = model.RNN(x, y)
   optimizer = model.optimizer(loss)
   accuracy  = model.accuracy(pred, y)
 
