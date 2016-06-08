@@ -26,8 +26,8 @@ def load_train_data(ids, xdata, ydata, zdata, batch_size):
 
 def split_data(allx, ally, allz):
   batch_num = allx.shape[0]
-  train_num = int(batch_num * 0.7) * FLAGS.batch_size
-  test_num  = int(batch_num * 1.0) * FLAGS.batch_size
+  train_num = int(batch_num * 0.7)
+  test_num  = int(batch_num * 1.0)
   print('train_num', train_num)
   print('test_num', test_num)
   # TODO: random shuffle
