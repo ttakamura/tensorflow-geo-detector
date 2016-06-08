@@ -42,7 +42,7 @@ def split_data(data):
   return train_data, test_data
 
 def load_doc_data(hash, data_dir):
-  x, y, z = np.load("%s/np/%s.npy" % (data_dir, hash))
+  x, y, z = np.load("%s/np/%s.npy" % (data_dir, hash.decode('utf-8')))
   return x, y, z
 
 def load_master_data(data_dir):
