@@ -63,7 +63,11 @@ def LSTM(x, y):
       # Invalid argument: logits and labels must be same size:
       # logits_size=[9800,3]
       # labels_size=[100,3]
-      loss = tf.nn.softmax_cross_entropy_with_logits(pred, current_y)
+
+      gg = pred.reshape(98, FLAGS.batch_size, FLAGS.out_size)
+
+      # I don't know これでうまくいく？
+      loss = tf.nn.softmax_cross_entropy_with_logits(gg[0], current_y)
 
       cost = tf.reduce_mean(loss)
       cost_all.append(cost)
