@@ -44,9 +44,7 @@ def RNN(x, y):
   with tf.variable_scope('embedId') as scope:
     with tf.device("/cpu:0"):
       embeddings = tf.Variable(tf.random_uniform([FLAGS.vocab_size, embedding_size], -1.0, 1.0), name='embedding')
-      print(x)
-      print(x.get_shape())
-      inputs = tf.nn.embedding_lookup(embeddings, x)
+      # inputs = tf.nn.embedding_lookup(embeddings, x)
 
   print(inputs.get_shape())
 
@@ -60,8 +58,9 @@ def RNN(x, y):
 
     with tf.variable_scope("RNN"):
       for time_step in range(steps):
+        inputs = tf.nn.embedding_lookup(embeddings, x[time_step])
         if time_step > 0: tf.get_variable_scope().reuse_variables()
-        output, state = lstm_cell(inputs[time_step], state)
+        output, state = lstm_cell(inputs, state)
 
         with tf.variable_scope('output_%s' % time_step) as scope:
           output = tf.matmul(output, W_out) + b_out
