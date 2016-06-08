@@ -18,7 +18,7 @@ def bias_variable(shape):
 
 def placeholders():
   with tf.variable_scope('placeholder') as scope:
-    x = tf.placeholder("float", [None, FLAGS.steps, FLAGS.vocab_size], name='X')
+    x = tf.placeholder("int",   [None, FLAGS.steps, 1],              name='X')
     y = tf.placeholder("float", [None, FLAGS.steps, FLAGS.out_size], name='Y')
   return x, y
 
@@ -38,13 +38,16 @@ def accuracy(pred, y):
   return accuracy
 
 def RNN(x, y):
-  x, y = reshape(x, y)
+  x, y = reshape(x, y, 1)
   embedding_size = FLAGS.hidden_size
 
   with tf.variable_scope('embedId') as scope:
     with tf.device("/cpu:0"):
       embeddings = tf.Variable(tf.random_uniform([FLAGS.vocab_size, embedding_size], -1.0, 1.0), name='embedding')
       inputs = tf.nn.embedding_lookup(embeddings, x)
+
+  print(x.get_shape())
+  print(inputs.get_shape())
 
   with tf.variable_scope('lstm1') as scope:
     lstm_cell = rnn_cell.BasicLSTMCell(FLAGS.hidden_size, forget_bias=1.0)
@@ -75,22 +78,11 @@ def RNN(x, y):
   return pred, loss, initial_state, final_state
 
 # ------- reshaping -----------------------------------
-def assert_shape(x,y):
-  xshape = x.get_shape()
-  xshape[0].assert_is_compatible_with(FLAGS.batch_size)
-  xshape[1].assert_is_compatible_with(FLAGS.steps)
-  xshape[2].assert_is_compatible_with(FLAGS.vocab_size)
-
-  yshape = y.get_shape()
-  yshape[0].assert_is_compatible_with(FLAGS.batch_size)
-  yshape[1].assert_is_compatible_with(FLAGS.steps)
-  yshape[2].assert_is_compatible_with(FLAGS.out_size)
-
-def assert_reshaped_x(x):
+def assert_reshaped_x(x, vocab_size):
   assert len(x) == FLAGS.steps
   xshape = x[0].get_shape()
   xshape[0].assert_is_compatible_with(FLAGS.batch_size)
-  xshape[1].assert_is_compatible_with(FLAGS.vocab_size)
+  xshape[1].assert_is_compatible_with(vocab_size)
 
 def assert_reshaped_y(y):
   assert len(y) == FLAGS.steps
@@ -98,16 +90,15 @@ def assert_reshaped_y(y):
   yshape[0].assert_is_compatible_with(FLAGS.batch_size)
   yshape[1].assert_is_compatible_with(FLAGS.out_size)
 
-def reshape(x, y):
-  assert_shape(x, y)
-
+def reshape(x, y, vocab_size):
+  # assert_shape(x, y)
   # Permuting => (steps, batch_size, vocab_size)
   # Reshaping => (steps * batch_size, vocab_size)
   # Split     => list of 'steps' tensors of shape (batch_size, vocab_size)
   x = tf.transpose(x, [1, 0, 2])
-  x = tf.reshape(x, [-1, FLAGS.vocab_size])
+  x = tf.reshape(x, [-1, vocab_size])
   x = tf.split(0, FLAGS.steps, x)
-  assert_reshaped_x(x)
+  assert_reshaped_x(x, vocab_size)
 
   # Permuting => (steps, batch_size, out_size)
   # Reshaping => (steps * batch_size, out_size)
@@ -116,5 +107,15 @@ def reshape(x, y):
   y = tf.reshape(y, [-1, FLAGS.out_size])
   y = tf.split(0, FLAGS.steps, y)
   assert_reshaped_y(y)
-
   return x, y
+
+#def assert_shape(x,y):
+#  xshape = x.get_shape()
+#  xshape[0].assert_is_compatible_with(FLAGS.batch_size)
+#  xshape[1].assert_is_compatible_with(FLAGS.steps)
+#  xshape[2].assert_is_compatible_with(FLAGS.vocab_size)
+#
+#  yshape = y.get_shape()
+#  yshape[0].assert_is_compatible_with(FLAGS.batch_size)
+#  yshape[1].assert_is_compatible_with(FLAGS.steps)
+#  yshape[2].assert_is_compatible_with(FLAGS.out_size)
