@@ -1,9 +1,22 @@
 import numpy as np
 
 def load_train_data(ids, xdata, ydata, zdata, batch_size):
+  one_batch_size = FLAGS.batch_size * FLAGS.steps
+
   xdata = np.array(xdata)
-  ydata = np.array(ydata)
-  zdata = np.array(zdata).astype(np.int32)
+  xdata = xdata.reshape(-1, FLAGS.vocab_size)
+
+  last_id = int(xdata.shape[0] / one_batch_size) * one_batch_size
+
+  xdata = xdata[0:last_id]
+  xdata = xdata.reshape(-1, FLAGS.batch_size, FLAGS.steps, FLAGS.vocab_size)
+
+  ydata = np.array(ydata)[0:last_id]
+  ydata = ydata.reshape(-1, FLAGS.batch_size, FLAGS.steps, FLAGS.out_size)
+
+  zdata = np.array(zdata).astype(np.int32)[0:last_id]
+  zdata = zdata.reshape(-1, FLAGS.batch_size, FLAGS.steps, 1)
+
   return xdata, ydata, zdata
 
 def split_data(allx, ally, allz):
