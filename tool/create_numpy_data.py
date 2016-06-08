@@ -100,15 +100,17 @@ for id, step, token, hash, category in open_csv(doc_dir, csv_file):
   y_matrixs[i][step, category] = 1.0
   z_matrixs[i][step, 0] = get_vocab_id(vocabrary, token)
 
-print(len(x_matrixs))
 print(x_matrixs[0].shape)
 
-for i in range(len(x_matrixs)):
-  np_file = ('%s/np/%s' % (base_dir, hash_map[i]))
-  np.save(np_file, (x_matrixs[i], y_matrixs[i], z_matrixs[i]))
-
 np_file = ('%s/np/main.np' % base_dir)
-np.save(np_file, (np.array(final_result), np.array(vocabrary)))
+np.save(np_file, (x_matrixs, y_matrixs, z_matrixs, np.array(final_result), np.array(vocabrary)))
 
-for key, value in vocabrary.items():
-  print("%s\t%s" % (key.encode('utf-8'), value))
+# for i in range(len(x_matrixs)):
+#   np_file = ('%s/np/%s' % (base_dir, hash_map[i]))
+#   np.save(np_file, (x_matrixs[i], y_matrixs[i], z_matrixs[i]))
+#
+# np_file = ('%s/np/main.np' % base_dir)
+# np.save(np_file, (np.array(final_result), np.array(vocabrary)))
+#
+# for key, value in vocabrary.items():
+#   print("%s\t%s" % (key.encode('utf-8'), value))
