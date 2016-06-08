@@ -69,12 +69,6 @@ def RNN(x, y):
           outputs.append(output)
 
     final_state = state
-
-  print('x', x[0])
-  print('y', y[0])
-  print('out', outputs[0])
-  print('pred', pred[0])
-  print('loss', loss)
   return pred, loss, initial_state, final_state
 
 # ------- reshaping -----------------------------------
