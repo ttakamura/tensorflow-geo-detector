@@ -3,11 +3,11 @@ import numpy as np
 def long_sequence_to_batch(sequence, batch_size):
   x_data  = list()
   x_batch = list()
-  for row in sequence:
+  for i in range(sequence.shape[0]):
     if len(x_batch) == batch_size:
       x_data.append(x_batch)
       x_batch = list()
-    x_batch.append(row)
+    x_batch.append(sequence[i,:])
   x_data.append(x_batch)
   return x_data
 
