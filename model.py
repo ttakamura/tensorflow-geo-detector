@@ -61,16 +61,17 @@ def LSTM(x, y):
   x, y  = reshape(x, y, 1)
   W_out = weight_variable([FLAGS.hidden_size, FLAGS.out_size])
   b_out = bias_variable([FLAGS.out_size])
-  pred  = list()
+  predictions = list()
 
   with tf.variable_scope('lstm1') as scope:
     lstm_cell = rnn_cell.BasicLSTMCell(FLAGS.hidden_size, forget_bias=1.0)
     outputs, states = rnn.rnn(lstm_cell, x, dtype=tf.float32)
 
     for output in outputs:
-      print(output)
-      pred = tf.matmul(outputs, W_out) + b_out
-      cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
+      pred = tf.matmul(output, W_out) + b_out
+      predictions.append(pred)
+
+    # cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(pred, y))
 
   return pred, cost
 
