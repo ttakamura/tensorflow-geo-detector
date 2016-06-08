@@ -38,7 +38,7 @@ def assert_z_row(row):
   assert row.dtype == np.int32
   assert row.shape[0] == FLAGS.batch_size
   assert row.shape[1]  > FLAGS.steps
-  assert row.shape[2] == FLAGS.out_size
+  assert row.shape[2] == 1
 
 def assert_all_data(allx, ally, allz):
   assert type(allx) == np.ndarray
