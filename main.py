@@ -45,11 +45,6 @@ def assert_all_data(allx, ally, allz):
 
 def main(argv=None):
   xdata, ydata, zdata, ids, vocabrary = reader.load_master_data(FLAGS.data_dir)
-  assert type(xdata) == list
-  assert type(ydata) == list
-  assert type(zdata) == list
-  assert len(xdata) == len(ydata)
-  assert len(xdata) == len(zdata)
 
   allx, ally, allz = reader.load_train_data(ids, xdata, ydata, zdata, FLAGS.batch_size)
   assert_all_data(allx, ally, allz)

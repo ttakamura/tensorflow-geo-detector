@@ -1,30 +1,12 @@
 import numpy as np
 
-def long_sequence_to_batch(sequence, batch_size):
-  x_data  = list()
-  x_batch = list()
-  for i in range(sequence.shape[0]):
-    if len(x_batch) == batch_size:
-      x_data.append(x_batch)
-      x_batch = list()
-    x_batch.append(sequence[i,:])
-  x_data.append(x_batch)
-  return x_data
-
 def load_train_data(ids, xdata, ydata, zdata, batch_size):
-  np.random.shuffle(ids)
-  data_num = len(ids)
-  x_data   = list()
-  y_data   = list()
-  z_data   = list()
-  for i in range(len(xdata)):
-    x = xdata[i]
-    y = ydata[i]
-    z = zdata[i]
-    x_data += long_sequence_to_batch(x, batch_size)
-    y_data += long_sequence_to_batch(y, batch_size)
-    z_data += long_sequence_to_batch(z, batch_size)
-  return x_data, y_data, z_data
+  xdata = np.array(xdata)
+  ydata = np.array(ydata)
+  zdata = np.array(zdata)
+  # TODO
+  # np.random.shuffle(ids)
+  return xdata, ydata, zdata
 
 def split_data(data):
   data_num   = len(data)
@@ -45,7 +27,6 @@ def load_master_data(data_dir):
   x, y, z, ids, vocabrary = np.load("%s/np/main.np.npy" % data_dir)
   np.random.shuffle(ids)
   return x, y, z, ids, vocabrary
-
 
 # def load_doc_data(hash, data_dir):
 #   if type(hash) == bytes:
