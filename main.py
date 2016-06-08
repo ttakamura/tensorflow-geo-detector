@@ -87,8 +87,9 @@ def main(argv=None):
       for i in range(train_x_data.shape[0]):
         batch_x = train_x_data[i]
         batch_y = train_y_data[i]
-        print(batch_x.shape)
-        print(batch_y.shape)
+
+        sess.run(pred[0], feed_dict={x: batch_x, y: batch_y})
+
         sess.run(optimizer, feed_dict={x: batch_x, y: batch_y})
 
       #if step > 0:
