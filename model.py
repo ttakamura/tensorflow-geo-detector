@@ -49,16 +49,14 @@ def LSTM(x, y):
   with tf.variable_scope('lstm1') as scope:
     lstm_cell = rnn_cell.BasicLSTMCell(FLAGS.hidden_size, forget_bias=1.0)
     outputs, states = rnn.rnn(lstm_cell, x, dtype=tf.float32)
-
-    print(len(outputs))
+    #
+    # print(len(outputs))
+    # for i in range(len(outputs)):
+    #   print(outputs[i].get_shape()) => (?, 128)
+    #
     for i in range(len(outputs)):
-      print(outputs[i].get_shape())
-
-    for i in range(len(outputs)):
-      output = outputs[i]
-      pred = tf.matmul(output, W_out) + b_out
-      predictions.append(pred)
-
+      output    = outputs[i]
+      pred      = tf.matmul(output, W_out) + b_out
       current_y = y[i]
 
       # tensorflow.python.pywrap_tensorflow.StatusNotOK: Invalid argument: logits and labels must be same size: logits_size=[9800,3] labels_size=[100,3]
@@ -66,6 +64,7 @@ def LSTM(x, y):
 
       cost = tf.reduce_mean(loss)
       cost_all.append(cost)
+      predictions.append(pred)
   return predictions, cost_all
 
 # ------- reshaping -----------------------------------
