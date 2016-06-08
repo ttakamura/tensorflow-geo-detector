@@ -10,8 +10,11 @@ base_dir = 'tabelog_final_s'
 csv_file = ('%s/data.csv' % base_dir)
 doc_dir  = ('%s/docs/' % base_dir)
 
-vocabrary     = {'<UNK>': 0}
-vocab_counter = {'<UNK>': 100000}
+vocabrary     = {}
+vocab_counter = {}
+add_vocab('<UNK>')
+vocab_counter['<UNK>'] = 100000
+print(vocabrary)
 
 data_num  = 0
 max_step  = 0
