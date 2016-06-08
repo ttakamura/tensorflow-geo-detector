@@ -17,17 +17,11 @@ def split_data(allx, ally):
   train_y_data = list()
   test_y_data  = list()
 
-  for xrow in allx[0:train_num]:
-    train_x_data.append(xrow)
+  train_x_data = allx[0:train_num]
+  test_x_data  = allx[train_num:test_num]
 
-  for xrow in allx[train_num:test_num]:
-    test_x_data.append(xrow)
-
-  for yrow in ally[0:train_num]:
-    train_y_data.append(yrow)
-
-  for yrow in ally[train_num:test_num]:
-    test_y_data.append(yrow)
+  train_y_data = ally[0:train_num]
+  test_y_data  = ally[train_num:test_num]
 
   return train_x_data, test_x_data, train_y_data, test_y_data
 
