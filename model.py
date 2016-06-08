@@ -44,9 +44,10 @@ def RNN(x, y):
   with tf.variable_scope('embedId') as scope:
     with tf.device("/cpu:0"):
       embeddings = tf.Variable(tf.random_uniform([FLAGS.vocab_size, embedding_size], -1.0, 1.0), name='embedding')
+      print(x)
+      print(x.get_shape())
       inputs = tf.nn.embedding_lookup(embeddings, x)
 
-  print(x.get_shape())
   print(inputs.get_shape())
 
   with tf.variable_scope('lstm1') as scope:
