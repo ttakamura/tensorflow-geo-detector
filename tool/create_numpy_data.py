@@ -100,6 +100,9 @@ for id, step, token, hash, category in open_csv(doc_dir, csv_file):
   y_matrixs[i][step, category] = 1.0
   z_matrixs[i][step, 0] = get_vocab_id(vocabrary, token)
 
+print(len(x_matrixs))
+print(x_matrixs[0].shape)
+
 for i in range(len(x_matrixs)):
   np_file = ('%s/np/%s' % (base_dir, hash_map[i]))
   np.save(np_file, (x_matrixs[i], y_matrixs[i], z_matrixs[i]))
