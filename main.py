@@ -78,7 +78,7 @@ def main(argv=None):
   x, y       = model.placeholders()
   pred, loss = model.LSTM(x, y)
   optimizer  = model.optimizer(loss)
-  accuracy   = model.accuracy(pred, y)
+  # accuracy   = model.accuracy(pred, y)
 
   with tf.Session() as sess:
     sess.run(tf.initialize_all_variables())
