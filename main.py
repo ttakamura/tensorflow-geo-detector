@@ -17,18 +17,16 @@ tf.app.flags.DEFINE_integer("hidden_size", 128,                "hidden")
 tf.app.flags.DEFINE_integer("out_size",    3,                  "out")
 
 def assert_x_row(row):
-  print(type(row))
-  print(len(row))
-  print(type(row[0]))
-  print(len(row[0].shape))
   assert type(row) == np.ndarray
-  assert row.shape[0] == FLAGS.steps
-  assert row.shape[1] == FLAGS.vocab_size
+  assert row.shape[0] > 1
+  assert row.shape[1] == FLAGS.steps
+  assert row.shape[2] == FLAGS.vocab_size
 
 def assert_y_row(row):
   assert type(row) == np.ndarray
-  assert row.shape[0] == FLAGS.steps
-  assert row.shape[1] == FLAGS.out_size
+  assert row.shape[0] > 1
+  assert row.shape[1] == FLAGS.steps
+  assert row.shape[2] == FLAGS.out_size
 
 def assert_all_data(allx, ally, allz):
   assert type(allx) == np.ndarray
