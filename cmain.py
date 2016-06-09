@@ -29,14 +29,18 @@ class RNNLM(chainer.Chain):
         self.l1.reset_state()
         self.l2.reset_state()
 
-    def __call__(self, x):
+    def __call__(self, x, t):
+        loss   = 0.0
+        outseq = list()
         for i in range(steps):
-            z = x[:,i,:]
-            h0 = self.embed(z)
-            h1 = self.l1(F.dropout(h0, train=self.train))
-            h2 = self.l2(F.dropout(h1, train=self.train))
-            y  = self.l3(F.dropout(h2, train=self.train))
-        return y
+            z    = x[:,i,:]
+            h0   = self.embed(z)
+            h1   = self.l1(F.dropout(h0, train=self.train))
+            h2   = self.l2(F.dropout(h1, train=self.train))
+            y    = self.l3(F.dropout(h2, train=self.train))
+            loss += softmax_cross_entropy(y, t)
+            outseq.append(y)
+        return loss, outseq
 
 vocab_size = 98
 n_units    = 128
@@ -45,11 +49,8 @@ batch_size = 100
 steps      = 50
 
 rnn = RNNLM(vocab_size, n_units, out_size)
-model = L.Classifier(rnn)
 optimizer = optimizers.SGD()
-optimizer.setup(model)
-
-model.zerograds()
+optimizer.setup(rnn)
 
 xdata, ydata, zdata, ids, vocabrary = reader.load_master_data('tabelog_final_s')
 
@@ -62,9 +63,7 @@ for epoch in range(20):
   for i in range(len(train_x_data)):
     x = Variable(train_z_data[i])
     t = Variable(train_y_data[i])
-
-
-
-    print(x.data.shape)
-    print(t.data.shape)
-    optimizer.update(model, x, t)
+    model.zerograds()
+    loss, outputs = model(x, t)
+    loss.backward()
+    optimizer.update()
