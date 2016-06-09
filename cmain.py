@@ -34,15 +34,16 @@ class RNNLM(chainer.Chain):
         outseq = list()
         for i in range(steps):
             z    = x[:,i,:]
+            zt   = t[:,i]
             h0   = self.embed(z)
             h1   = self.l1(F.dropout(h0, train=self.train))
             h2   = self.l2(F.dropout(h1, train=self.train))
             y    = self.l3(F.dropout(h2, train=self.train))
             print(y.data.shape)
             print(y.data.dtype)
-            print(t.data.shape)
-            print(t.data.dtype)
-            loss += F.softmax_cross_entropy(y, t)
+            print(zt.data.shape)
+            print(zt.data.dtype)
+            loss += F.softmax_cross_entropy(y, zt)
             outseq.append(y)
         return loss, outseq
 
