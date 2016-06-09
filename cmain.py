@@ -85,16 +85,17 @@ def train_for(i, train_z_data, train_y_data):
 for epoch in range(20):
   print('epoch %d' % epoch)
 
-  for i in range(len(train_x_data)):
+  for i in range(len(train_z_data)):
     loss = train_for(i, train_z_data, train_y_data)
     if i % 10 == 0:
         print("GC....")
         gc.collect()
 
-  # Save the model and the optimizer
-  print('epoch done')
-  print('save the model')
-  serializers.save_npz(('data/chainer_%d.model' % epoch), model)
-
-  print('save the optimizer')
-  serializers.save_npz(('data/chainer_%d.state' % epoch), optimizer)
+    # accuracy(test_x_data, test_y_data)
+    if i % 50 == 0:
+      # Save the model and the optimizer
+      print('epoch done')
+      print('save the model')
+      serializers.save_npz(('data/chainer_%d_%d.model' % (epoch, i)), model)
+      print('save the optimizer')
+      serializers.save_npz(('data/chainer_%d_%d.state' % (epoch, i)), optimizer)
