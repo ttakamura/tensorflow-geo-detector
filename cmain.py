@@ -37,6 +37,7 @@ class RNNLM(chainer.Chain):
 vocab_size = 10000
 n_units    = 128
 out_size   = 3
+batch_size = 100
 
 rnn = RNNLM(vocab_size, n_units, out_size)
 model = L.Classifier(rnn)
@@ -45,9 +46,9 @@ optimizer.setup(model)
 
 model.zerograds()
 
-xdata, ydata, zdata, ids, vocabrary = reader.load_master_data(FLAGS.data_dir)
+xdata, ydata, zdata, ids, vocabrary = reader.load_master_data('tabelog_final_s')
 
-allx, ally, allz = reader.load_train_data(ids, xdata, ydata, zdata, FLAGS.batch_size)
+allx, ally, allz = reader.load_train_data(ids, xdata, ydata, zdata, batch_size)
 
 train_x_data, test_x_data, train_y_data, test_y_data, train_z_data, test_z_data = reader.split_data(allx, ally, allz)
 
