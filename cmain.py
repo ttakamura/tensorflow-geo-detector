@@ -45,9 +45,9 @@ class RNNLM(chainer.Chain):
 vocab_size = 98
 n_units    = 64
 out_size   = 3
-batch_size = 100
+batch_size = 20
 steps      = 30
-use_gpu    = True
+use_gpu    = False # True
 
 rnn = RNNLM(vocab_size, n_units, out_size)
 optimizer = optimizers.SGD()
