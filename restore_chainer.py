@@ -1,14 +1,12 @@
 import chainer
 from chainer import serializers
+from IPython import embed
 
 import cmain
 import sys
 
-model = cmain.model()
+model    = cmain.model()
+npy_file = sys.argv[1]
+serializers.load_npz(npy_file, model)
 
-print(sys.argv[0])
-print(sys.argv[1])
-
-1/0
-
-serializers.load_npz('', model)
+embed()
