@@ -57,7 +57,7 @@ optimizer = optimizers.SGD()
 optimizer.setup(rnn)
 
 if use_gpu:
-    cuda.get_device(args.gpu).use()
+    # cuda.get_device(args.gpu).use()
     rnn.to_gpu()
     xp = cuda.cupy
 else:
