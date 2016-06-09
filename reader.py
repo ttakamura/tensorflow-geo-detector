@@ -1,26 +1,24 @@
 import numpy as np
 import tensorflow as tf
 
-FLAGS = tf.app.flags.FLAGS
-
-def load_train_data(ids, xdata, ydata, zdata, batch_size):
-  one_batch_size = FLAGS.batch_size * FLAGS.steps
+def load_train_data(ids, xdata, ydata, zdata, batch_size, steps, vocab_size):
+  one_batch_size = batch_size * steps
 
   xdata = np.array(xdata)
-  xdata = xdata.reshape(-1, FLAGS.vocab_size)
+  xdata = xdata.reshape(-1, vocab_size)
 
   last_id = int(xdata.shape[0] / one_batch_size) * one_batch_size
 
   xdata = xdata[0:last_id]
-  xdata = xdata.reshape(-1, FLAGS.batch_size, FLAGS.steps, FLAGS.vocab_size)
+  xdata = xdata.reshape(-1, batch_size, steps, vocab_size)
 
-  ydata = np.array(ydata).reshape(-1, FLAGS.out_size)
+  ydata = np.array(ydata).reshape(-1, out_size)
   ydata = ydata[0:last_id]
-  ydata = ydata.reshape(-1, FLAGS.batch_size, FLAGS.steps, FLAGS.out_size)
+  ydata = ydata.reshape(-1, batch_size, steps, out_size)
 
   zdata = np.array(zdata).astype(np.int32).reshape(-1, 1)
   zdata = zdata[0:last_id]
-  zdata = zdata.reshape(-1, FLAGS.batch_size, FLAGS.steps, 1)
+  zdata = zdata.reshape(-1, batch_size, steps, 1)
 
   return xdata, ydata, zdata
 
