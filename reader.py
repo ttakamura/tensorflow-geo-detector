@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-def load_train_data(ids, xdata, ydata, zdata, batch_size, steps, vocab_size):
+def load_train_data(ids, xdata, ydata, zdata, batch_size, steps, vocab_size, out_size):
   one_batch_size = batch_size * steps
 
   xdata = np.array(xdata)
