@@ -34,7 +34,7 @@ class RNNLM(chainer.Chain):
         y = self.l3(F.dropout(h2, train=self.train))
         return y
 
-vocab_size = 10000
+vocab_size = 98
 n_units    = 128
 out_size   = 3
 batch_size = 100
