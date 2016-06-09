@@ -60,11 +60,8 @@ if use_gpu:
 else:
     xp = np
 
-xdata, ydata, zdata, ids, vocabrary = reader.load_master_data('tabelog_final_s')
-
-allx, ally, allz = reader.load_train_data(ids, xdata, ydata, zdata, batch_size, steps, vocab_size, out_size)
-
-train_x_data, test_x_data, train_y_data, test_y_data, train_z_data, test_z_data = reader.split_data(allx, ally, allz)
+def model():
+  return rnn
 
 def train(x, t):
   x = Variable(cuda.to_gpu(x))
@@ -82,20 +79,36 @@ def train_for(i, train_z_data, train_y_data):
   print("data %d, loss %f" % (i, loss.data))
   return loss
 
-for epoch in range(20):
-  print('epoch %d' % epoch)
+def main():
+  xdata, ydata, zdata, ids, vocabrary = reader.load_master_data('tabelog_final_s')
 
-  for i in range(len(train_z_data)):
-    loss = train_for(i, train_z_data, train_y_data)
-    if i % 10 == 0:
-        print("GC....")
-        gc.collect()
+  allx, ally, allz = reader.load_train_data(ids, xdata, ydata, zdata, batch_size, steps, vocab_size, out_size)
 
-    # accuracy(test_x_data, test_y_data)
-    if i % 50 == 0:
-      # Save the model and the optimizer
-      print('epoch done')
-      print('save the model')
-      serializers.save_npz(('data/chainer_%d_%d.model' % (epoch, i)), rnn)
-      print('save the optimizer')
-      serializers.save_npz(('data/chainer_%d_%d.state' % (epoch, i)), optimizer)
+  train_x_data, test_x_data, train_y_data, test_y_data, train_z_data, test_z_data = reader.split_data(allx, ally, allz)
+
+  for epoch in range(20):
+    print('epoch %d' % epoch)
+
+    for i in range(len(train_z_data)):
+      loss = train_for(i, train_z_data, train_y_data)
+      if i % 10 == 0:
+          print("GC....")
+          gc.collect()
+
+      # accuracy(test_x_data, test_y_data)
+      if i % 50 == 0:
+        # Save the model and the optimizer
+        print('epoch done')
+        print('save the model')
+        serializers.save_npz(('data/chainer_%d_%d.model' % (epoch, i)), rnn)
+        print('save the optimizer')
+        serializers.save_npz(('data/chainer_%d_%d.state' % (epoch, i)), optimizer)
+
+        import tensorflow as tf
+        import numpy as np
+
+        FLAGS = tf.app.flags.FLAGS
+        tf.app.flags.DEFINE_string('mode', 'train', 'train or console')
+
+if __name__ == '__main__':
+  main()
