@@ -1,5 +1,3 @@
-import numpy as np
-
 import chainer
 # # from chainer import computational_graph
 from chainer import cuda
@@ -52,10 +50,18 @@ n_units    = 128
 out_size   = 3
 batch_size = 100
 steps      = 50
+use_gpu    = True
 
 rnn = RNNLM(vocab_size, n_units, out_size)
 optimizer = optimizers.SGD()
 optimizer.setup(rnn)
+
+if use_gpu:
+    cuda.get_device(args.gpu).use()
+    rnn.to_gpu()
+    xp = cuda.cupy
+else:
+    xp = np
 
 xdata, ydata, zdata, ids, vocabrary = reader.load_master_data('tabelog_final_s')
 
@@ -67,7 +73,7 @@ for epoch in range(20):
   print('epoch %d' % epoch)
   for i in range(len(train_x_data)):
     x = Variable(train_z_data[i])
-    t = Variable(train_y_data[i].argmax(2).astype(np.int32))
+    t = Variable(train_y_data[i].argmax(2).astype(xp.int32))
     # t = Variable(train_y_data[i])
     optimizer.zero_grads()
     loss, outputs = rnn(x, t)
