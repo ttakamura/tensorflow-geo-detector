@@ -67,7 +67,7 @@ for epoch in range(20):
   for i in range(len(train_x_data)):
     x = Variable(train_z_data[i])
 
-    t = Variable(train_y_data[i].argmax(2))
+    t = Variable(train_y_data[i].argmax(2).astype(np.int32))
     # t = Variable(train_y_data[i])
 
     optimizer.zero_grads()
