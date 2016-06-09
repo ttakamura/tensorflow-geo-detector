@@ -3,6 +3,7 @@ import numpy as np
 import chainer
 # # from chainer import computational_graph
 from chainer import cuda
+from chainer import Chain
 import chainer.links as L
 from chainer import optimizers
 from chainer import serializers
@@ -12,25 +13,32 @@ import scipy
 import reader
 import model
 
-class RNN(Chain):
-    def __init__(self):
-        super(RNN, self).__init__(
-            embed=L.EmbedID(1000, 100),  # word embedding
-            mid=L.LSTM(100, 50),  # the first LSTM layer
-            out=L.Linear(50, 1000),  # the feed-forward output layer
+class RNNLM(chainer.Chain):
+    def __init__(self, n_vocab, n_units, n_out, train=True):
+        super(RNNLM, self).__init__(
+            embed=L.EmbedID(n_vocab, n_units),
+            l1=L.LSTM(n_units, n_units),
+            l2=L.LSTM(n_units, n_units),
+            l3=L.Linear(n_units, n_out),
         )
+        self.train = train
 
     def reset_state(self):
-        self.mid.reset_state()
+        self.l1.reset_state()
+        self.l2.reset_state()
 
-    def __call__(self, cur_word):
-        # Given the current word ID, predict the next word.
-        x = self.embed(cur_word)
-        h = self.mid(x)
-        y = self.out(h)
+    def __call__(self, x):
+        h0 = self.embed(x)
+        h1 = self.l1(F.dropout(h0, train=self.train))
+        h2 = self.l2(F.dropout(h1, train=self.train))
+        y = self.l3(F.dropout(h2, train=self.train))
         return y
 
-rnn = RNN()
+vocab_size = 10000
+n_units    = 128
+out_size   = 3
+
+rnn = RNNLM(vocab_size, n_units, out_size)
 model = L.Classifier(rnn)
 optimizer = optimizers.SGD()
 optimizer.setup(model)
