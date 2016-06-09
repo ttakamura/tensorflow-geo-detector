@@ -72,9 +72,13 @@ train_x_data, test_x_data, train_y_data, test_y_data, train_z_data, test_z_data 
 for epoch in range(20):
   print('epoch %d' % epoch)
   for i in range(len(train_x_data)):
-    x = Variable(train_z_data[i])
-    t = Variable(train_y_data[i].argmax(2).astype(xp.int32))
-    # t = Variable(train_y_data[i])
+
+    a = train_z_data[i]
+    x = Variable(cuda.to_gpu(a))
+
+    b = train_y_data[i].argmax(2).astype(xp.int32)
+    t = Variable(cuda.to_gpu(b))
+
     optimizer.zero_grads()
     loss, outputs = rnn(x, t)
     loss.backward()
