@@ -31,7 +31,7 @@ class RNNLM(chainer.Chain):
     def __call__(self, x, t):
         loss   = 0.0
         outseq = list()
-        for i in range(steps):
+        for i in range(x.shape[1]):
             z    = x[:,i,:]
             h0   = self.embed(z)
             h1   = self.l1(F.dropout(h0, train=self.train))
