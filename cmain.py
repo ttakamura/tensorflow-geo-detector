@@ -65,21 +65,23 @@ allx, ally, allz = reader.load_train_data(ids, xdata, ydata, zdata, batch_size, 
 
 train_x_data, test_x_data, train_y_data, test_y_data, train_z_data, test_z_data = reader.split_data(allx, ally, allz)
 
+def train(x, t):
+  x = Variable(cuda.to_gpu(x))
+  t = Variable(cuda.to_gpu(t))
+  optimizer.zero_grads()
+  loss, outputs = rnn(x, t)
+  loss.backward()
+  optimizer.update()
+  return loss
+
 for epoch in range(20):
   print('epoch %d' % epoch)
 
   for i in range(len(train_x_data)):
-    a = train_z_data[i]
-    x = Variable(cuda.to_gpu(a))
-
-    b = train_y_data[i].argmax(2).astype(xp.int32)
-    t = Variable(cuda.to_gpu(b))
-
-    optimizer.zero_grads()
-    loss, outputs = rnn(x, t)
-    loss.backward()
-    print("loss %f" % loss.data)
-    optimizer.update()
+    x = train_z_data[i]
+    t = train_y_data[i].argmax(2).astype(xp.int32)
+    loss = train(x, t)
+    print("data %d, loss %f" % (i, loss.data))
 
   # Save the model and the optimizer
   print('epoch done')
