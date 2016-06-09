@@ -67,8 +67,8 @@ train_x_data, test_x_data, train_y_data, test_y_data, train_z_data, test_z_data 
 
 for epoch in range(20):
   print('epoch %d' % epoch)
-  for i in range(len(train_x_data)):
 
+  for i in range(len(train_x_data)):
     a = train_z_data[i]
     x = Variable(cuda.to_gpu(a))
 
