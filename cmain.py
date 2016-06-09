@@ -4,6 +4,7 @@ import chainer
 # # from chainer import computational_graph
 from chainer import cuda
 from chainer import Chain
+from chainer import Variable
 import chainer.links as L
 from chainer import optimizers
 from chainer import serializers
