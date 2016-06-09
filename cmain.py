@@ -47,7 +47,7 @@ n_units    = 64
 out_size   = 3
 batch_size = 20
 steps      = 30
-use_gpu    = False # True
+use_gpu    = True
 
 rnn = RNNLM(vocab_size, n_units, out_size)
 optimizer = optimizers.SGD()
