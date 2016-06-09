@@ -6,6 +6,7 @@ from chainer import cuda
 from chainer import Chain
 from chainer import Variable
 import chainer.links as L
+import chainer.functions as F
 from chainer import optimizers
 from chainer import serializers
 
