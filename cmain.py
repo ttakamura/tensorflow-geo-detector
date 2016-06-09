@@ -93,7 +93,6 @@ def main():
     for i in range(len(train_z_data)):
       loss = train_for(i, train_z_data, train_y_data)
       if i % 10 == 0:
-          print("GC....")
           gc.collect()
 
       # accuracy(test_x_data, test_y_data)

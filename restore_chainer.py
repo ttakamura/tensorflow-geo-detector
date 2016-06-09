@@ -22,3 +22,5 @@ allx, ally, allz                    = reader.load_train_data(ids, xdata, ydata, 
 train_x_data, test_x_data, train_y_data, test_y_data, train_z_data, test_z_data = reader.split_data(allx, ally, allz)
 
 embed()
+
+# model(test_z_data[0], None)
