@@ -37,19 +37,15 @@ class RNNLM(chainer.Chain):
             h1   = self.l1(F.dropout(h0, train=self.train))
             h2   = self.l2(F.dropout(h1, train=self.train))
             y    = self.l3(F.dropout(h2, train=self.train))
-            # print(y.data.shape)
-            # print(y.data.dtype)
-            # print(zt.data.shape)
-            # print(zt.data.dtype)
             loss += F.softmax_cross_entropy(y, zt)
             outseq.append(y)
         return loss, outseq
 
 vocab_size = 98
-n_units    = 128
+n_units    = 64
 out_size   = 3
 batch_size = 100
-steps      = 50
+steps      = 30
 use_gpu    = True
 
 rnn = RNNLM(vocab_size, n_units, out_size)
@@ -84,3 +80,11 @@ for epoch in range(20):
     loss.backward()
     print("loss %f" % loss.data)
     optimizer.update()
+
+  # Save the model and the optimizer
+  print('epoch done')
+  print('save the model')
+  serializers.save_npz(('data/chainer_%d.model' % epoch), model)
+
+  print('save the optimizer')
+  serializers.save_npz(('data/chainer_%d.state' % epoch), optimizer)
