@@ -12,6 +12,7 @@ import numpy as np
 import scipy
 import reader
 import model
+import gc
 
 class RNNLM(chainer.Chain):
     def __init__(self, n_vocab, n_units, n_out, train=True):
@@ -74,14 +75,21 @@ def train(x, t):
   optimizer.update()
   return loss
 
+def train_for(i, train_z_data, train_y_data):
+  x = train_z_data[i]
+  t = train_y_data[i].argmax(2).astype(xp.int32)
+  loss = train(x, t)
+  print("data %d, loss %f" % (i, loss.data))
+  return loss
+
 for epoch in range(20):
   print('epoch %d' % epoch)
 
   for i in range(len(train_x_data)):
-    x = train_z_data[i]
-    t = train_y_data[i].argmax(2).astype(xp.int32)
-    loss = train(x, t)
-    print("data %d, loss %f" % (i, loss.data))
+    loss = train_for(i, train_z_data, train_y_data)
+    if i % 10 == 0:
+        print("GC....")
+        gc.collect()
 
   # Save the model and the optimizer
   print('epoch done')
