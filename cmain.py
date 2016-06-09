@@ -96,6 +96,6 @@ for epoch in range(20):
       # Save the model and the optimizer
       print('epoch done')
       print('save the model')
-      serializers.save_npz(('data/chainer_%d_%d.model' % (epoch, i)), model)
+      serializers.save_npz(('data/chainer_%d_%d.model' % (epoch, i)), rnn)
       print('save the optimizer')
       serializers.save_npz(('data/chainer_%d_%d.state' % (epoch, i)), optimizer)
